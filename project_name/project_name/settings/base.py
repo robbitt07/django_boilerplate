@@ -29,7 +29,7 @@ INSTALLED_APPS = PREREQUISITES_APPS + PROJECT_APPS + THIRD_PARTY_APPS
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 LOGIN_URL = '/login/'
-LOGIN_EXEMPT_URLS = '/static/'
+LOGIN_EXEMPT_URLS = ['/static/',] # Requires list of strings
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
