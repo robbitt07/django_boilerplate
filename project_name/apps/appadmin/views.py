@@ -19,7 +19,7 @@ def login_user(request):
 		if user is not None:
 			if user.is_active:
 				login(request, user)
-				return HttpResponseRedirect(reverse('index'))
+				return HttpResponseRedirect(reverse('admin:index'))
 			else:
 				return render(request, 'appadmin/login.html', {'error_message': 'Your account has been disabled'})
 		else:
