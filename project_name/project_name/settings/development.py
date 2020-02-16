@@ -1,10 +1,18 @@
-from <django_package_name>.settings.base import *
+from .base import *
 from decouple import config
+import os
 
 SECRET_KEY = config('SECRET_KEY')
 DEBUG = config('DEBUG', cast=bool)
 
 ALLOWED_HOSTS = config('ALLOWED_HOSTS', cast=lambda v: [s.strip() for s in v.split(',')])
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, '..', 'db.sqlite3'),
+    }
+}
 
 DATABASES = {
     'default': {

@@ -1,4 +1,4 @@
-from <django_package_name>.settings.base import *
+from .base import *
 from decouple import config
 
 SECRET_KEY = config('SECRET_KEY')
