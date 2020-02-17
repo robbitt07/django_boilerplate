@@ -6,7 +6,7 @@ import uuid
 class Common(models.Model):
 	# Override default id
 	id = models.BigAutoField(db_column='id', primary_key=True)
-	uuid = models.UUIDField(default=uuid.uuid4, index=True, editable=False)
+	uuid = models.UUIDField(default=uuid.uuid4, editable=False, db_index=True)
 	
 	# Meta Columns
 	created_on  = models.DateTimeField(db_column='created_on', auto_now_add=True, editable=False)
