@@ -242,3 +242,10 @@ LOGGING_LOGGERS = {
         'handlers': ['console', 'task_file'],
     },
 }
+
+# Customer Integration
+CURRENT_CUSTOMER_INTEGRATION = "STRIPE"
+
+# Stripe
+STRIPE_SECRET_API_KEY = config('STRIPE_SECRET_API_KEY', cast=str)
+STRIPE_WEBHOOK_API_KEY = config('STRIPE_WEBHOOK_API_KEY', cast=str)

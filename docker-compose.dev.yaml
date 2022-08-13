@@ -7,18 +7,18 @@ services:
     volumes:
       - ./docker/redis/redis.conf:/usr/local/etc/redis/redis.conf
     ports:
-      - '6379:6379'
+      - '${REDIS_PORT}:6379'
   rabbitmq:
     restart: unless-stopped
     container_name: <django_package_name>-rabbitmq
     image: rabbitmq:3-management
     ports:
-      - '15672:15672'
-      - '5672:5672'
+      - '${RABBITMQ_ADMIN_PORT}:15672'
+      - '${RABBITMQ_PORT}:5672'
     environment:
       RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER}
       RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASS}
-      RABBITMQ_DEFAULT_VHOST: '<django_package_name>'
+      RABBITMQ_DEFAULT_VHOST: ${RABBITMQ_VHOST}
   webserver:
     restart: unless-stopped
     extra_hosts:
@@ -26,7 +26,7 @@ services:
     environment:
       - DB_HOST=host.docker.internal
       - RABBIT_HOST=rabbitmq
-      - REDIS_CONN_STR=redis://redis:6379/1
+      - REDIS_CONN_STR=${REDIS_CONN_STR}
     depends_on:
       - redis
       - rabbitmq
