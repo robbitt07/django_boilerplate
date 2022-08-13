@@ -1,0 +1,21 @@
+version: '3.9'
+services:
+  redis:
+    restart: unless-stopped
+    container_name: <django_package_name>-redis
+    image: redis:4.0.6
+    volumes:
+      - ./docker/redis/redis.conf:/usr/local/etc/redis/redis.conf
+    ports:
+      - '6379:6379'
+  rabbitmq:
+    restart: unless-stopped
+    container_name: <django_package_name>-rabbitmq
+    image: rabbitmq:3-management
+    ports:
+      - '15672:15672'
+      - '5672:5672'
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASS}
+      RABBITMQ_DEFAULT_VHOST: '<django_package_name>'

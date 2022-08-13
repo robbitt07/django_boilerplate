@@ -1,7 +1,7 @@
 call pip install virtualenv
-rmdir <django_package_name>_venv /S /Q
-call python -m venv <django_package_name>_venv
-call <django_package_name>_venv\Scripts\activate
+rmdir venv /S /Q
+call python -m venv venv
+call venv\Scripts\activate
 call python -m pip install --upgrade pip
 call pip install -r requirements/requirements.txt
 git rm -rf .git

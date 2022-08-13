@@ -1,0 +1,46 @@
+BEGIN:VCARD
+VERSION:3.0
+KIND:"individual"
+{# woofington;dawg;husky #}
+N:{{ last_name }};{{ first_name }};;;
+{# Husky Dawg Woofington #}
+FN:{{ first_name }} {{ last_name }}
+NICKNAME:{{ display_name }}
+{% for title in titles %}
+TITLE:{{ title }}
+{% endfor %}
+{% for dept in departments %}
+ORG:{{ dept }}
+{% endfor %}
+{# EMAIL;type=INTERNET;type=WORK:dawg@uw.edu #}
+{% if office_email %}
+EMAIL;type=INTERNET;type=WORK:{{ office_email }}
+{% endif %}
+{# EMAIL;type=INTERNET;type=WORK:dawg@uw.edu #}
+{% if personal_email %}
+EMAIL;type=INTERNET;type=pref:{{ personal_email }}
+{% endif %}
+{# TEL;type=voice,pager:5558675309 #}
+{% if mobile_phone %}
+TEL;type=CELL;type=VOICE;type=pref:{{mobile_phone}}
+{% endif %}
+{# TEL;TYPE=voice,pager:5558675309 #}
+{% if work_phone %}
+TEL;type=WORK;type=VOICE;type=pref:{{work_phone}}
+{% endif %}
+{% if linkedin_url %}
+X-SOCIALPROFILE;type=linkedin:{{linkedin_url}}
+{% endif %}
+{% if twitter_url %}
+X-SOCIALPROFILE;type=twitter:{{twitter_url}}
+{% endif %}
+{% if facebook_url %}
+X-SOCIALPROFILE;type=facebook:{{facebook_url}}
+{% endif %}
+{% if website %}
+URL;type=WORK;CHARSET=UTF-8:{{website}}
+{% endif %}
+{% if profile_icon %}
+PHOTO;ENCODING=b;TYPE=JPEG:{{profile_icon}}
+{% endif %}
+END:VCARD

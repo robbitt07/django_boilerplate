@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block header %}
+<style>
+    .font-h3 {
+        margin-bottom: 30px;
+        line-height: 1.4em;
+        font-weight: 400;
+        color: rgba(255, 255, 255, 0.8);
+        font-size: 1.4375rem;
+    }
+</style>
+{% endblock %}
+{% block content %}
+<div class="row">
+    <div class="col-sm-12 col-md-4">
+        <span class="font-h3">{{user}}</span>
+        <ul style="list-style-type: none;">
+            <li>
+                <a href="{% url 'customer:api_token' %}" data-toggle="tooltip" title="API Token" style="margin-bottom: 0.70rem;">
+                    <button class="btn btn-icon btn-simple btn-round btn-neutral">
+                        <i class="tim-icons icon-key-25 mr-1"></i>
+                    </button>
+                    API Keys
+                </a>
+            </li>
+            <li>
+                <a href="{% url 'events:domain_list' %}" data-toggle="tooltip" title="Domains" style="margin-bottom: 0.70rem;">
+                    <button class="btn btn-icon btn-simple btn-round btn-neutral">
+                        <i class="tim-icons icon-bullet-list-67 mr-1"></i>
+                    </button>
+                    Domains
+                </a>
+            </li>
+            <li>
+                <a href="{% url 'events:event_type_list' %}" data-toggle="tooltip" title="Event Types" style="margin-bottom: 0.70rem;">
+                    <button class="btn btn-icon btn-simple btn-round btn-neutral">
+                        <i class="tim-icons icon-bullet-list-67 mr-1"></i>
+                    </button>
+                    Event Types
+                </a>
+            </li>
+            <li>
+                <a href="{% url 'events:subscriber_list' %}" data-toggle="tooltip" title="Subscribers" style="margin-bottom: 0.70rem;">
+                    <button class="btn btn-icon btn-simple btn-round btn-neutral">
+                        <i class="tim-icons icon-single-02 mr-1"></i>
+                    </button>
+                    Subscribers
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block header %}
+<style>
+    .font-h3 {
+        margin-bottom: 30px;
+        line-height: 1.4em;
+        font-weight: 400;
+        color: rgba(255, 255, 255, 0.8);
+        font-size: 1.4375rem;
+    }
+    i {
+        margin-left: -30px;
+        cursor: pointer;
+    }
+    #password {
+        color: rgba(255, 255, 255, 0.8);
+        display: inline-block;
+        padding-right: 2rem;
+        width: 45%;
+    }
+</style>
+{% endblock %}
+{% block content %}
+<div class="row">
+    <div class="col-sm-12">
+        <h3>{{user}}</h3>
+        <input class="form-control" type="password" name="password" id="password" value="{{api_token}}" readonly="readonly">
+        <i class="tim-icons icon-zoom-split" id="togglePassword"></i>
+    </div>
+</div>
+<script>
+    const togglePassword = document.querySelector("#togglePassword");
+    const password = document.querySelector("#password");
+
+    togglePassword.addEventListener("click", function () {
+        // toggle the type attribute
+        const type = password.getAttribute("type") === "password" ? "text" : "password";
+        password.setAttribute("type", type);
+        
+        // toggle the icon
+        this.classList.toggle("bi-eye");
+    });
+
+    // prevent form submit
+    const form = document.querySelector("form");
+    form.addEventListener('submit', function (e) {
+        e.preventDefault();
+    });
+</script>
+{% endblock %}

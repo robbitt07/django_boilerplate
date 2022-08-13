@@ -2,6 +2,7 @@ from django.http import HttpResponseRedirect
 from django.conf import settings
 from django.utils.deprecation import MiddlewareMixin
 
+from apps.customer.config import get_or_set_customer_user_config, Config
 
 from re import compile
 
@@ -22,7 +23,21 @@ class LoginRequiredMiddleware(MiddlewareMixin):
         if not request.user.is_authenticated:
             try:
                 path = request.path_info.lstrip('/')
-                if not any(m.match(path) for m in EXEMPT_URLS):
+                if not any(m.match(path) for m in EXEMPT_URLS) and path != '':
                     return HttpResponseRedirect(settings.LOGIN_URL)
             except:
                 return HttpResponseRedirect(settings.LOGIN_URL)
+
+
+class UserCustomerMiddleware(MiddlewareMixin):
+    def process_request(self, request):
+        if request.user.is_authenticated:
+            if not request.user.is_admin:
+                request.customer = request.user.customer
+                customer_config, user_config = get_or_set_customer_user_config(
+                    customer_id=request.customer.id,
+                    user_id=request.user.id
+                )
+                request.app_config = Config(
+                    customer_config=customer_config, user_config=user_config
+                )

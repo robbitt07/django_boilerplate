@@ -1,0 +1,232 @@
+{% extends "base.html" %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block header %}
+<style>
+    .font-h3 {
+        margin-bottom: 0px;
+        line-height: 1.4em;
+        font-weight: 400;
+        color: rgba(255, 255, 255, 0.8);
+        font-size: 1.4375rem;
+    }
+    .qr-code {
+        height: 11rem;
+    }
+</style>
+{% endblock %}
+{% block content %}
+<div class="row">
+    <div class="col-sm-12">
+        <div class="panel panel-default">
+            <div class="panel-body text-center">
+                <span class="font-h3">{{object.display_name}}</span>
+                {% if object.profile_icon %}
+                    <br>
+                    <img class="mb-2" src="{{ object.profile_icon.url }}" style="height: 100px; border-radius: 50%;">
+                    <br>
+                {% endif %}
+                <p>
+                    {% if object.company %}<span class="text-muted">Company:</span> {{ object.company }}<br>{% endif %}
+                    {% if object.position %}<span class="text-muted">Position:</span> {{ object.position }}<br>{% endif %}
+                    {% if object.office_email %}<span class="text-muted">Office Email:</span> {{ object.office_email }}<br>{% endif %}
+                    {% if object.personal_email %}<span class="text-muted">Personal Email:</span> {{ object.personal_email }}<br>{% endif %}
+                    {% if object.office_number %}
+                        <span class="text-muted">Office Number:</span>
+                         <a href="tel:{{ object.formatted_office_number }}">{{ object.formatted_office_number }}</a>
+                        <br>
+                    {% endif %}
+                    {% if object.personal_phone_number %}
+                        <span class="text-muted">Office Number:</span>
+                        <a href="tel:{{ object.formatted_personal_phone_number }}">{{ object.formatted_personal_phone_number }}</a>
+                        <br>
+                    {% endif %}
+                    {% if object.website %}
+                        <span class="text-muted">Website:</span>
+                        <a href="{{object.website}}" target="_blank">{{ object.website }}</a>
+                        <br>
+                    {% endif %}
+                    
+                    {% if object.linkedin_url %}
+                        <a href="{{ object.linkedin_url }}"><i class="fab fa-linkedin fa-3x mt-2 ml-2"></i>
+                    {% endif %}
+                    {% if object.twitter_url %}
+                        <a href="{{ object.twitter_url }}"><i class="fab fa-twitter fa-3x mt-2 ml-2"></i></a>
+                    {% endif %}
+                    {% if object.facebook_url %}
+                        <a href="{{ object.facebook_url }}"><i class="fab fa-facebook fa-3x mt-2 ml-2"></i></a>
+                    {% endif %}
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="card-deck">
+    <div class="card col-sm-auto">
+        <div class="card-body">
+            <p class="font-h3 text-center">Share vCard</p>
+            <div class="panel-body text-center">
+                <a href="{{ object.get_user_vcard_url }}"
+                    data-toggle="tooltip"
+                    title="Download vCard"
+                    class="btn btn-primary btn-round px-3 mt-4">
+                    <i class="far fa-address-book mr-1"></i></i>vCard
+                </a>
+                &nbsp;
+                <a href="{{ object.vcard_qr_code.url }}"
+                    data-toggle="tooltip"
+                    title="Download"
+                    class="btn btn-primary btn-round px-3 mt-4">
+                    <i class="fas fa-cloud-download-alt"></i>
+                    Download QR
+                </a>
+                <br>
+                <br>
+                {% if object.vcard_qr_code %}
+                    <h4 class="mb-2">vCard QR Code</h4>
+                    <a class="text-muted" 
+                        href="{{ object.vcard_qr_code.url }}">
+                        <img class="qr-code" src="{{ object.vcard_qr_code.url }}" alt="vCard Download">
+                    </a>
+                {% endif %}
+                <div class="btn-wrapper mb-3">
+                    <a href="{% url 'register' %}" class="btn btn-primary mt-4">
+                      Register
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card col-sm-auto">
+        <div class="card-body">
+            <p class="font-h3 text-center">Share Profile Link</p>
+            <div class="panel-body text-center">
+                &nbsp;
+                <a href="mailto:?body={{object.display_name}} QR Contact:%0A%0A{{ share_link }}%0A"
+                    data-toggle="tooltip"
+                    title="Email Profile Link"
+                    class="btn btn-primary btn-round px-3 mt-4">
+                    <i class="far fa-envelope"></i>
+                    Email
+                </a>
+                &nbsp;
+                <a onclick="copyToClipboard()"
+                    data-toggle="tooltip"
+                    title="Copy Profile Link"
+                    class="btn btn-primary btn-round px-3 mt-4">
+                    <span style="display: flex">
+                        <i class="far fa-copy mr-1"></i>
+                        <span id="copy_clipboard">Copy</span>
+                    </span>
+                </a>
+                &nbsp;
+                <a href="{{ object.vcard_qr_code.url }}"
+                    data-toggle="tooltip"
+                    title="Download"
+                    class="btn btn-primary btn-round px-3 mt-4">
+                    <i class="fas fa-cloud-download-alt"></i>
+                    Download QR
+                </a>
+                
+                <br>
+                <br>
+                {% if object.profile_qr_code %}
+                    <h4 class="mb-2">Profile QR Code</h4>
+                    <a class="text-muted" href="{{ object.profile_qr_code.url }}">
+                        <img class="qr-code" src="{{ object.profile_qr_code.url }}" alt="vCard Download">
+                    </a>
+                {% endif %}
+                <div class="btn-wrapper mb-3">
+                    <a href="{% url 'register' %}" class="btn btn-primary mt-4">
+                      Register
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- <div class="row">
+    <div class="col-sm-auto">
+        <div class="col">
+            <div class="panel panel-default">
+                <p class="font-h3 text-center">Share Profile Link</p>
+                <div class="panel-body text-center">
+                    <a href="mailto:?body={{object.display_name}} QR Contact:%0A%0A{{ share_link }}%0A"
+                        data-toggle="tooltip"
+                        title="Email Profile Link"
+                        class="btn btn-primary btn-round px-3 mt-4">
+                        <i class="far fa-envelope"></i>
+                        Email
+                    </a>
+                    &nbsp;
+                    <a onclick="copyToClipboard()"
+                        data-toggle="tooltip"
+                        title="Copy Profile Link"
+                        class="btn btn-primary btn-round px-3 mt-4">
+                        <span style="display: flex">
+                            <i class="far fa-copy mr-1"></i>
+                            <span id="copy_clipboard">Copy</span>
+                        </span>
+                    </a>
+                    <br>
+                    <br>
+                    {% if object.vcard_qr_code %}
+                        <h4 class="mb-2">Profile QR Code</h4>
+                        <a class="text-muted" 
+                            href="{{ object.vcard_qr_code.url }}">
+                            <img class="qr-code" src="{{ object.vcard_qr_code.url }}" alt="vCard Download">
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-auto">
+        <div class="col">
+            <div class="panel panel-default">
+                <p class="font-h3 text-center">Share vCard</p>
+                <div class="panel-body text-center">
+                    <a href="{{ object.get_user_vcard_url }}"
+                        data-toggle="tooltip"
+                        title="Download vCard"
+                        class="btn btn-primary btn-round px-3 mt-4">
+                        <i class="far fa-address-book mr-1"></i></i>vCard
+                    </a>
+                    <br>
+                    <br>
+                    {% if object.vcard_qr_code %}
+                        <h4 class="mb-2">vCard QR Code</h4>
+                        <a class="text-muted" href="{{ object.profile_qr_code.url }}">
+                            <img class="qr-code" src="{{ object.profile_qr_code.url }}" alt="vCard Download">
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div> -->
+<hr>
+{% endblock %}
+{% block footer %}
+<script>
+	// Copy Link to Clipboard
+	const copyToClipboard = (requestID, source = 'live') => {
+        // Generate HTML Blob to copy to Clipboard
+        var type = "text/plain";
+        var blob = new Blob([`{{object.display_name}} QR Contact:\n{{ share_link }}\n`], { type });
+        var clipboardData = [new ClipboardItem({ [type]: blob })];
+        // Copy to Clipboard
+        navigator.clipboard.write(clipboardData).then(function() {
+            $("#copy_clipboard").html('Copied!');
+        }, function(err) {
+            console.log(err)
+            alert('Error copying to clipboard');
+        });
+	}
+</script>
+{% endblock %}
