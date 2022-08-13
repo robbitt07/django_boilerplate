@@ -75,7 +75,7 @@ class Customer(models.Model):
 			return {
 				"subscription": {
 					"name": "Demo",
-					"description": "Demo accounts have access to a demo entity dataset and limited features. To currate your own data upgrade to a paid account."
+					"description": "Demo accounts have limited feature access. To access all features, upgrade to a paid account."
 				}
 			}
 		return self._active_subscription
@@ -336,7 +336,7 @@ class CustomerUsage(models.Model):
 	# ID Override to align with rest of structure
 	id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
 	USAGE_UNIT_TYPE_OPTIONS = (
-		("SE", "Source Entity Spot Usage"),
+		("<>", "Usage Unit"),
 	)
 	customer = models.ForeignKey(Customer, on_delete=models.PROTECT, related_name='usage')
 	observation_datetime = models.DateTimeField()
