@@ -1,16 +1,11 @@
 from django.contrib.auth import authenticate, get_user_model, login, logout
 from django.contrib.auth.forms import AuthenticationForm
-from django.contrib.sites.shortcuts import get_current_site
-from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.http import HttpResponseRedirect
-from django.http.response import HttpResponse
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import render
 from django.urls import reverse
 from django.utils.encoding import force_text
 from django.utils.http import urlsafe_base64_decode
 from django.views import View
-from django.views.generic import View
-
 
 from apps.customer.forms import UserActivateResetPasswordForm
 from apps.customer.tokens import account_activation_token
@@ -98,10 +93,3 @@ class UserDashboardLanding(CustomerViewMixin, View):
 
     def get(self, *args, **kwargs):
         return render(self.request, 'customer/dashboard.html')
-
-
-class UserAPIView(View):
-
-    def get(self, *args, **kwargs):
-        context = {'api_token': self.request.user.auth_token}
-        return render(self.request, 'customer/user_api.html', context=context)
