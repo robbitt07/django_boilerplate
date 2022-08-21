@@ -170,11 +170,12 @@ CACHES = {
 }
 
 # RabbitMQ
-RABBITMQ_HOST=config('RABBIT_HOST', cast=str, default='localhost')
-RABBITMQ_VHOST=config('RABBITMQ_VHOST', cast=str, default='<django_package_name>')
-RABBITMQ_USER=config('RABBITMQ_USER', cast=str, default='guest')
-RABBITMQ_PASS=config('RABBITMQ_PASS', cast=str, default='guest')
-RABBITMQ_QUEUES=[]
+RABBITMQ_HOST = config('RABBITMQ_HOST', cast=str, default='localhost')
+RABBITMQ_PORT = config('RABBITMQ_PORT', cast=int, default=5672)
+RABBITMQ_VHOST = config('RABBITMQ_VHOST', cast=str, default='webhookk')
+RABBITMQ_USER = config('RABBITMQ_USER', cast=str, default='guest')
+RABBITMQ_PASS = config('RABBITMQ_PASS', cast=str, default='guest')
+RABBITMQ_QUEUES = []
 
 # Logging
 LOGGING_FORMATTERS = {

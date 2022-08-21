@@ -16,15 +16,25 @@ MAX_FAIL = 2
 class QueueConnection(object):
     def __init__(self, queues: list = settings.RABBITMQ_QUEUES):
         self.host = settings.RABBITMQ_HOST
+        self.port = settings.RABBITMQ_PORT
         self.virtual_host = settings.RABBITMQ_VHOST
         self.user = settings.RABBITMQ_USER
         self.password = settings.RABBITMQ_PASS
         self.queues = queues
         self.connection = None
+    
+    def _get_connection_params(self, connection_attempts: int = 5, heartbeat: int = None):
+        credentials = pika.PlainCredentials(self.user, self.password)
+        return pika.ConnectionParameters(
+            host=self.host, port=self.port, virtual_host=self.virtual_host,
+            credentials=credentials, connection_attempts=connection_attempts, heartbeat=heartbeat
+        )
 
     def _establish_connection(self, initial=False, wait=True):
-        if initial:
-            logger.info(f'Establishing connection with RabbitMQ host: {self.host}', extra={'task': 'QueueConnection'})
+        logger.info(
+            f'Establishing connection with RabbitMQ host: {self.host}:{self.port}', 
+            extra={'task': 'QueueConnection'}
+        )
 
         if self.connection is not None:
             try:
@@ -36,12 +46,8 @@ class QueueConnection(object):
             time.sleep(2)
 
         #TODO: Add logging on failure
-        self.credentials = pika.PlainCredentials(self.user, self.password)
         self.connection = pika.BlockingConnection(
-            pika.ConnectionParameters(
-                host=self.host, virtual_host=self.virtual_host, credentials=self.credentials,
-                connection_attempts=10, heartbeat=1200
-            )
+            self._get_connection_params(heartbeat=1200)
         )
         self.channel = self.connection.channel()
         for queue in self.queues:
@@ -51,7 +57,7 @@ class QueueConnection(object):
         try:
             if not self.connection or self.connection.is_closed:
                 logger.warn(
-                    f'Re-establishing connection with RabbitMQ host: {self.host}',
+                    f'Re-establishing connection with RabbitMQ host: {self.host}:{self.port}',
                     extra={'task': 'QueueConnection'}
                 )
                 self._establish_connection()
@@ -59,7 +65,7 @@ class QueueConnection(object):
         except ConnectionClosed:
             time.sleep(1)
             logger.warn(
-                f'Re-establishing connection with RabbitMQ host: {self.host}',
+                f'Re-establishing connection with RabbitMQ host: {self.host}:{self.port}',
                 extra={'task': 'QueueConnection'}
             )
             self._establish_connection()
@@ -68,7 +74,7 @@ class QueueConnection(object):
         except NoFreeChannels:
             time.sleep(1)
             logger.warn(
-                f'Re-establishing connection with RabbitMQ host: {self.host}',
+                f'Re-establishing connection with RabbitMQ host: {self.host}:{self.port}',
                 extra={'task': 'QueueConnection'}
             )
             self._establish_connection()
@@ -76,13 +82,7 @@ class QueueConnection(object):
 
     def _send_message(self, queue: str, message: str) -> bool:
         # Establish Connection
-        credentials = pika.PlainCredentials(self.user, self.password)
-        connection = pika.BlockingConnection(
-            pika.ConnectionParameters(
-                host=self.host, virtual_host=self.virtual_host, credentials=credentials,
-                connection_attempts=10, heartbeat=1200
-            )
-        )
+        connection = pika.BlockingConnection(self._get_connection_params())
         channel = connection.channel()
         # Declare Queue
         channel.queue_declare(queue=queue, durable=True)
@@ -132,13 +132,7 @@ class QueueConnection(object):
 
     def queue_declare(self, queue: str) -> bool:
         # Establish Connection
-        credentials = pika.PlainCredentials(self.user, self.password)
-        connection = pika.BlockingConnection(
-            pika.ConnectionParameters(
-                host=self.host, virtual_host=self.virtual_host, credentials=credentials,
-                connection_attempts=10, heartbeat=1200
-            )
-        )
+        connection = pika.BlockingConnection(self._get_connection_params())
         channel = connection.channel()
         # Declare Queue
         channel.queue_declare(queue=queue, durable=True)
