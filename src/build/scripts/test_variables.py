@@ -1,0 +1,1 @@
+ADMIN_EMAIL="test_user@org.com"

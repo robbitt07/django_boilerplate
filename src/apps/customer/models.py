@@ -132,27 +132,29 @@ class UserManager(BaseUserManager):
 
 		return user
 
-	def create_staffuser(self, email:str, password:str) -> object:
+	def create_staffuser(self, email: str, password: str,  **kwargs) -> object:
 		"""
 		Creates and saves a staff user with the given email and password.
 		"""
 		user = self.create_user(
 			email=email,
 			password=password,
-			customer_id=None
+			customer_id=None,
+            **kwargs
 		)
 		user.internal_staff = True
 		user.save(using=self._db)
 		return user
 
-	def create_superuser(self, email:str, password:str) -> object:
+	def create_superuser(self, email: str, password: str, **kwargs) -> object:
 		"""
 		Creates and saves a superuser with the given email and password.
 		"""
 		user = self.create_user(
 			email=email,
 			password=password,
-			customer_id=None
+			customer_id=None,
+            **kwargs
 		)
 		user.internal_staff = True
 		user.internal_admin = True
