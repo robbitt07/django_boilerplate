@@ -25,7 +25,7 @@ class CachedDjangoPaginator(Paginator):
 class CachedDjangoPagination(PageNumberPagination):
     django_paginator_class = CachedDjangoPaginator
     page_size = 20
-    page_size_query_param = 'page_size'
+    page_size_query_param = "page_size"
     max_page_size = 100
     pagination_default_count = 1000
 

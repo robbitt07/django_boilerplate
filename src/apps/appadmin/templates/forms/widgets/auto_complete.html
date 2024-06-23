@@ -1,0 +1,2 @@
+{% include "django/forms/widgets/input.html" %}
+<input type="hidden" id="{{ widget_hidden.id }}" name="{{ widget_hidden.name }}"{% if widget_hidden.value != None %} value="{{ widget_hidden.value|stringformat:'s' }}"{% endif %}>

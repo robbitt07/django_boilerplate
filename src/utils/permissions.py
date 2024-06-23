@@ -7,4 +7,4 @@ class IsInternal(BasePermission):
     """
 
     def has_permission(self, request, view):
-        return getattr(request, 'is_internal', False)
+        return getattr(request, "is_internal", False)

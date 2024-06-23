@@ -24,7 +24,7 @@ class DisplayArrayField(ListField):
     """
 
     def __init__(self, *args, **kwargs):
-        display_options = kwargs.pop('display_options')
+        display_options = kwargs.pop("display_options")
         super().__init__(self, *args, **kwargs)
         self.display_options = display_options
 

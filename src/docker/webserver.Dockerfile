@@ -28,7 +28,7 @@ RUN python manage.py collectstatic --noinput
 # Run the Web Server when the container launches.
 CMD exec \
     gunicorn \
-    <django_package_name>.wsgi:application \
+    yabpt.wsgi:application \
     --log-config /usr/src/app/logging.conf \
     --bind 0.0.0.0:80 \
     --timeout 180 \

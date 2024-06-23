@@ -10,12 +10,12 @@ def base_transform(x): return x
 class ListFilterMixin:
 	"""
 	filter_params_map = {
-		'carrier_name': ['carrier_name__icontains', 'carrier_dba__icontains',],
-        'mc_number': ['mc_number__icontains'],
+		"carrier_name": ["carrier_name__icontains", "carrier_dba__icontains",],
+        "mc_number": ["mc_number__icontains"],
 	}
     filter_params_transform = {
-		'phone': lambda x: PhoneNumber(x).formatted,
-        'viewable': lambda x: parse_bool(x),
+		"phone": lambda x: PhoneNumber(x).formatted,
+        "viewable": lambda x: parse_bool(x),
 	}
 	"""
 	default_params = {}
@@ -57,7 +57,7 @@ class ListFilterMixin:
 		# TODO: Update to using standard query param cleaning
 		raw_query_dict = {
 			key: value for key, value in raw_query_dict.items()
-			if key in filter_params_map and value != ''
+			if key in filter_params_map and value != ""
 		}
 
 		# Apply Param Routing and Transformation Logic

@@ -4,7 +4,7 @@ import os
 import sys
 
 sys.path.append(os.curdir)
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "tagr.settings.development")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "yabpt.settings.development")
 django.setup()
 
 # --- Create User --------------------------------------------------------------

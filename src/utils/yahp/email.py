@@ -14,24 +14,24 @@ class TooManyRequests(Exception):
 
 
 flag_words = [
-    'accounting', 'office', 'contact', 'safety', 'claims', 'sales', 'compliance'
+    "accounting", "office", "contact", "safety", "claims", "sales", "compliance"
 ]
 
 
 def normalize_email(email_address: str) -> str:
     if email_address is None:
         return email_address
-    return str(email_address).split(' ')[0].lower().strip()
+    return str(email_address).split(" ")[0].lower().strip()
 
 
 def get_email_classification(email_address: str) -> str:
-    if '@' not in email_address:
+    if "@" not in email_address:
         return None
 
-    email_name = email_address.split('@')[0]
+    email_name = email_address.split("@")[0]
     if any(flag_word in email_name for flag_word in flag_words):
         return SafetyContactRole
-    elif 'dispatch@' in email_address:
+    elif "dispatch@" in email_address:
         return DispatchContactRole
     return OtherContactRole
 
@@ -48,16 +48,16 @@ def get_dispatch_email_or_first(email_ls: List[str]) -> str:
 def generate_dispatch_email(email_address: str) -> bool:
     if email_address is None:
         return None
-    if '@' not in email_address:
+    if "@" not in email_address:
         return None
-    domain = email_address.split('@')[1]
+    domain = email_address.split("@")[1]
     return f"dispatch@{domain}"
 
 
 def zero_bounce_email_validation(clean_email: str) -> Dict:
     response = requests.get(
         f"https://api.zerobounce.net/v2/validate",
-        params={'email': clean_email, 'api_key': settings.ZERO_BOUNCE_API_KEY},
+        params={"email": clean_email, "api_key": settings.ZERO_BOUNCE_API_KEY},
         timeout=(5, 30)
     )
 
@@ -73,7 +73,7 @@ def zero_bounce_email_validation(clean_email: str) -> Dict:
         }
 
     payload = response.json()
-    if payload['status'] == "valid":
+    if payload["status"] == "valid":
         return {
             "email": clean_email,
             "valid": True,
@@ -81,7 +81,7 @@ def zero_bounce_email_validation(clean_email: str) -> Dict:
             "error_desc": None,
             "extra": payload
         }
-    elif payload['status'] == "invalid":
+    elif payload["status"] == "invalid":
         return {
             "email": clean_email,
             "valid": False,
@@ -102,8 +102,8 @@ def zero_bounce_email_validation(clean_email: str) -> Dict:
 def is_it_real_email_validation(clean_email: str) -> Dict:
     response = requests.get(
         "https://isitarealemail.com/api/email/validate",
-        params={'email': clean_email},
-        headers={'Authorization': f"Bearer {settings.IS_IT_REAL_EMAIL_API_KEY}"},
+        params={"email": clean_email},
+        headers={"Authorization": f"Bearer {settings.IS_IT_REAL_EMAIL_API_KEY}"},
         timeout=(5, 30)
     )
 
@@ -118,7 +118,7 @@ def is_it_real_email_validation(clean_email: str) -> Dict:
             "error_desc": f"API Error | code={str(response.status_code)} reason={str(response.reason)}"
         }
 
-    status = response.json()['status']
+    status = response.json()["status"]
     if status == "valid":
         return {
             "email": clean_email,

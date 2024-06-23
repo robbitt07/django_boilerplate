@@ -12,7 +12,7 @@ def dateutil_parse(val: str) -> Union[datetime, date]:
 	try:
 		return _dateutil_parse(timestr=val)
 	except:
-		return ''
+		return ""
 
 
 def is_outside_business_hours() -> bool:
@@ -83,7 +83,7 @@ def get_trailing_bom(lookback_months: int) -> list:
     """
     start_dt = beginning_of_current_month() - relativedelta(months=lookback_months)
     end_dt = beginning_of_current_month() - relativedelta(months=1)
-    dates = pd.date_range(start_dt, end_dt, freq='MS')
+    dates = pd.date_range(start_dt, end_dt, freq="MS")
     return list(dates.date)
 
 
@@ -149,11 +149,11 @@ def get_short_datetime_display(val: Union[datetime, date, str], force_date: bool
 
 		# Format Time for Today: 10:00am
 		if val.date() == date.today() and not force_date:
-			return val.strftime("%I:%M %p").lstrip("0")
+			return val.strftime('%I:%M %p').lstrip("0")
 
 		# Format for Date this year: Mar 3
 		elif val.year == date.today().year:
-			return f'{val.strftime("%b")} {val.day}'
+			return f"{val.strftime('%b')} {val.day}"
 
 		# Format for Date not this year: 10/8/22
 		return f"{val.month}/{val.day}/{str(val.year)[2:4]}"
@@ -165,7 +165,7 @@ def get_short_datetime_display(val: Union[datetime, date, str], force_date: bool
 
 		# Format for Date this year: Mar 3
 		elif val.year == date.today().year:
-			return f'{val.strftime("%b")} {val.day}'
+			return f"{val.strftime('%b')} {val.day}"
 
 		# Format for Date not this year: 10/8/22
 		return f"{val.month}/{val.day}/{str(val.year)[2:4]}"
@@ -195,11 +195,11 @@ def get_long_datetime_display(val: Union[datetime, date, str]) -> str:
 		if val.tzinfo is not None:
 			val = timezone.localtime(val)
 
-		return f'{val.strftime("%b")} {val.day}, {str(val.year)[2:4]} {val.strftime("%I:%M %p").lstrip("0")}'
+		return f"{val.strftime('%b')} {val.day}, {str(val.year)[2:4]} {val.strftime('%I:%M %p').lstrip('0')}"
 
 	elif isinstance(val, date):
 		if val == date.today():
 			return "Today"
-		return f'{val.strftime("%b")} {val.day}, {str(val.year)[2:4]}'
+		return f"{val.strftime('%b')} {val.day}, {str(val.year)[2:4]}"
 
 	return val

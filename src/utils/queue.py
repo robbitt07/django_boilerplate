@@ -8,7 +8,7 @@ import pika
 from pika.exceptions import ConnectionClosed, NoFreeChannels
 import time
 
-logger = logging.getLogger('service')
+logger = logging.getLogger("service")
 
 MAX_FAIL = 2
 
@@ -32,8 +32,8 @@ class QueueConnection(object):
 
     def _establish_connection(self, initial=False, wait=True):
         logger.info(
-            f'Establishing connection with RabbitMQ host: {self.host}:{self.port}', 
-            extra={'task': 'QueueConnection'}
+            f"Establishing connection with RabbitMQ host: {self.host}:{self.port}", 
+            extra={"task": "QueueConnection"}
         )
 
         if self.connection is not None:
@@ -57,16 +57,16 @@ class QueueConnection(object):
         try:
             if not self.connection or self.connection.is_closed:
                 logger.warn(
-                    f'Re-establishing connection with RabbitMQ host: {self.host}:{self.port}',
-                    extra={'task': 'QueueConnection'}
+                    f"Re-establishing connection with RabbitMQ host: {self.host}:{self.port}",
+                    extra={"task": "QueueConnection"}
                 )
                 self._establish_connection()
             return self.connection.channel()
         except ConnectionClosed:
             time.sleep(1)
             logger.warn(
-                f'Re-establishing connection with RabbitMQ host: {self.host}:{self.port}',
-                extra={'task': 'QueueConnection'}
+                f"Re-establishing connection with RabbitMQ host: {self.host}:{self.port}",
+                extra={"task": "QueueConnection"}
             )
             self._establish_connection()
             return self.connection.channel()
@@ -74,8 +74,8 @@ class QueueConnection(object):
         except NoFreeChannels:
             time.sleep(1)
             logger.warn(
-                f'Re-establishing connection with RabbitMQ host: {self.host}:{self.port}',
-                extra={'task': 'QueueConnection'}
+                f"Re-establishing connection with RabbitMQ host: {self.host}:{self.port}",
+                extra={"task": "QueueConnection"}
             )
             self._establish_connection()
             return self.connection.channel()
@@ -87,7 +87,7 @@ class QueueConnection(object):
         # Declare Queue
         channel.queue_declare(queue=queue, durable=True)
         channel.basic_publish(
-            exchange='', 
+            exchange="", 
             routing_key=queue, 
             body=message,
             properties=pika.BasicProperties(
@@ -100,14 +100,14 @@ class QueueConnection(object):
             # Send Message
             self._send_message(queue=queue, message=message)
             logger.info(
-                f'Queue=`{queue}` Submitted message: {message[0:100]}',
-                extra={'task': 'QueueConnection'}
+                f"Queue=`{queue}` Submitted message: {message[0:100]}",
+                extra={"task": "QueueConnection"}
             )
             return True
         except Exception as e:
             logger.error(
-                'Failed to publish message', exc_info=True,
-                extra={'task': 'QueueConnection'}
+                "Failed to publish message", exc_info=True,
+                extra={"task": "QueueConnection"}
             )
             if fail_count >= MAX_FAIL:
                 raise e
@@ -116,7 +116,7 @@ class QueueConnection(object):
             self.publish(queue=queue, message=message, fail_count=fail_count)
             return False
 
-    def consume(self, callback, queue: str = 'default'):
+    def consume(self, callback, queue: str = "default"):
         self._establish_connection(initial=True, wait=False)
         channel = self.get_channel()
         channel.basic_qos(prefetch_count=1)
@@ -143,7 +143,7 @@ QUEUE_CONNECTION = QueueConnection()
 
 def publish_task(task: str,
                  params: dict,
-                 queue: str = 'default',
+                 queue: str = "default",
                  connection: QueueConnection = QUEUE_CONNECTION) -> bool:
     # Build Message
     message = json.dumps({

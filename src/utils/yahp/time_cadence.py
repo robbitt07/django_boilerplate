@@ -1,9 +1,9 @@
 
-DailyCandence = 'daily'
-WeeklyCandence = 'weekly'
-MonthlyCadence = 'monthly'
-QuarterlyCadence = 'quarterly'
-AnnualCadence = 'annual'
+DailyCandence = "daily"
+WeeklyCandence = "weekly"
+MonthlyCadence = "monthly"
+QuarterlyCadence = "quarterly"
+AnnualCadence = "annual"
 
 CADENCE_CONVERSION_TO_WEEKLY_ROUTER = {
     DailyCandence : lambda x : 7 * x,
@@ -31,7 +31,7 @@ def convert_cadence_to_weekly(x,cadence):
 def convert_cadence_from_weekly(x,cadence):
     try:
         # Round to 2 decimal places here since this is used to display to the user
-        # This difference in rounding will help to ensure that rounding errors aren't presented to the user
+        # This difference in rounding will help to ensure that rounding errors aren"t presented to the user
         return round(CADENCE_CONVERSION_FROM_WEEKLY_ROUTER[cadence](float(x)),3)
     except:
         return None

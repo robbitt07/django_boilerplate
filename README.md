@@ -1,6 +1,6 @@
 # Django Boilerplate Template
 
-Quick start Django 2.2 project template.
+Quick start Django 4.2 project template.
 
 # Usage
 
@@ -8,9 +8,7 @@ Quick start Django 2.2 project template.
 git clone https://github.com/robbitt07/django_boilerplate
 ```
 
-Replace `project_name` in `.gitignore` and the two folders `/project_name/` and `/project_name/project_name/` with the project name.
-
-Find and replace `veritas` with the project name.
+Replace `yabpt` in `.gitignore` and the two folders `/yabpt/` and `/yabpt/yabpt/` with the project name.
 
 Add .env file with following format.
 ```

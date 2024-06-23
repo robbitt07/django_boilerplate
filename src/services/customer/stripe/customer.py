@@ -8,7 +8,7 @@ def stripe_create_customer(id: int, name:str , customer_primary_email:str) -> st
     res = stripe.Customer.create(
         name=name,
         email=customer_primary_email,
-        metadata={'source_id': id}
+        metadata={"source_id": id}
     )
     # TODO: Error Handling and Logging
     return res.id

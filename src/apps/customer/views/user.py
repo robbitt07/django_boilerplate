@@ -16,26 +16,26 @@ User = get_user_model()
 
 def logout_user(request):
     logout(request)
-    return HttpResponseRedirect(reverse('login_user'))
+    return HttpResponseRedirect(reverse("login_user"))
 
 
 def login_user(request):
     form = AuthenticationForm()
     if request.method == "POST":
-        username = request.POST['username']
-        password = request.POST['password']
+        username = request.POST["username"]
+        password = request.POST["password"]
         user = authenticate(username=username, password=password)
         if user is not None:
             if user.is_active:
                 login(request, user)
                 if user.is_admin:
-                    return HttpResponseRedirect(reverse('customer:admin_landing'))
-                return HttpResponseRedirect(reverse('customer:dashboard'))
+                    return HttpResponseRedirect(reverse("customer:admin_landing"))
+                return HttpResponseRedirect(reverse("customer:dashboard"))
             else:
-                return render(request, 'customer/login.html', {'error_message': 'Your account has been disabled'})
+                return render(request, "customer/login.html", {"error_message": "Your account has been disabled"})
         else:
-            return render(request, 'customer/login.html', {'error_message': 'Invalid login', 'form' : form})
-    return render(request, 'customer/login.html', {'form' : form})
+            return render(request, "customer/login.html", {"error_message": "Invalid login", "form" : form})
+    return render(request, "customer/login.html", {"form" : form})
 
 
 class UserActivateView(View):
@@ -53,12 +53,12 @@ class UserActivateView(View):
 
         if user_obj is not None and account_activation_token.check_token(user_obj, token):
             form = UserActivateResetPasswordForm(user=user_obj)
-            context = {'form': form}
-            return render(request, 'customer/user/user_activation_reset_password.html', context)
+            context = {"form": form}
+            return render(request, "customer/user/user_activation_reset_password.html", context)
 
         else:
             # Invalid link
-            return render(request, 'customer/user/user_activation_invalid.html')
+            return render(request, "customer/user/user_activation_invalid.html")
 
     def post(self, request, uidb, token, *args, **kwargs):
         ## Get User for Activation
@@ -83,13 +83,13 @@ class UserActivateView(View):
                 login(request, user_obj)
 
                 ## Direct to landing page
-                return HttpResponseRedirect(reverse('customer:dashboard'))
+                return HttpResponseRedirect(reverse("customer:dashboard"))
 
             ## Form is invalid, render form again
-            return render(request, 'customer/user/user_activation_reset_password.html', context={'form': form})
+            return render(request, "customer/user/user_activation_reset_password.html", context={"form": form})
 
 
 class UserDashboardLanding(CustomerViewMixin, View):
 
     def get(self, *args, **kwargs):
-        return render(self.request, 'customer/dashboard.html')
+        return render(self.request, "customer/dashboard.html")

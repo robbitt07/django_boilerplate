@@ -14,12 +14,12 @@ import logging
 import sys
 
 
-api_logger = logging.getLogger('api')
+api_logger = logging.getLogger("api")
 
 
 class StandardResultsSetPagination(PageNumberPagination):
     page_size = 50
-    page_size_query_param = 'page_size'
+    page_size_query_param = "page_size"
     max_page_size = 1000
 
 
@@ -50,10 +50,10 @@ class UserApiMixin:
             )
 
     def handle_invalid_request(self, message, error_code):
-        raise ParseError(detail={'message': message, 'code': error_code})
+        raise ParseError(detail={"message": message, "code": error_code})
 
     def handle_not_found_request(self, message, error_code):
-        raise NotFound(detail={'message': message, 'code': error_code})
+        raise NotFound(detail={"message": message, "code": error_code})
 
     def handle_logging_info(self, msg):
         api_logger.info(msg=msg)

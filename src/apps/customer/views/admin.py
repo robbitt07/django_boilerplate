@@ -6,4 +6,4 @@ from utils.mixins import AdminMixin
 
 class AdminLanding(AdminMixin, ListView):
     model = Customer
-    template_name = 'customer/admin/landing.html'
+    template_name = "customer/admin/landing.html"

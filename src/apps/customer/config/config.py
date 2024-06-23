@@ -35,9 +35,9 @@ def get_or_set_customer_user_config(customer_id: str, user_id: str) -> Tuple[Dic
     if customer_config is None:
         customer_obj = Customer.objects.get(pk=customer_id)
         customer_config = {
-            'trial': customer_obj.trail_account,
-            'active': customer_obj.integration_payment_active and customer_obj.has_active_subscription,
-            'integration_key': customer_obj.get_or_create_integration_key()
+            "trial": customer_obj.trail_account,
+            "active": customer_obj.integration_payment_active and customer_obj.has_active_subscription,
+            "integration_key": customer_obj.get_or_create_integration_key()
         }
         ## Set Customer Config
         cache.set(customer_cache_key, customer_config, 86400)
@@ -48,8 +48,8 @@ def get_or_set_customer_user_config(customer_id: str, user_id: str) -> Tuple[Dic
     if user_config is None:
         user_obj = User.objects.get(pk=user_id)
         user_config = {
-            'customer_staff': user_obj.customer_staff,
-            'customer_admin': user_obj.customer_admin,
+            "customer_staff": user_obj.customer_staff,
+            "customer_admin": user_obj.customer_admin,
         }
         ## Set Customer Config
         cache.set(user_cache_key, user_config, 86400)

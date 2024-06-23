@@ -1,0 +1,13 @@
+<div id="message" style="position: fixed; right: 2px !important; z-index: 1000;">
+{% if messages %}
+    
+    {% for message in messages %}
+    <div class="alert alert-{{ message.tags }} mb-2" role="alert" data-notify="container">
+        <button type="button" class="close ml-1" data-dismiss="alert" aria-label="Close">
+            <i class="far fa-times-circle"></i>
+        </button>
+        <span data-notify="container">{{ message }}</span>
+    </div>
+    {% endfor %}
+{% endif %}
+</div>

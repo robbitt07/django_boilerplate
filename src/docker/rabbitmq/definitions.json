@@ -16,13 +16,13 @@
     ],
     "vhosts": [
      {
-      "name": "\/<django_package_name>"
+      "name": "\/yabpt"
      }
     ],
     "permissions": [
      {
       "user": "user1",
-      "vhost": "\/<django_package_name>",
+      "vhost": "\/yabpt",
       "configure": ".*",
       "write": ".*",
       "read": ".*"

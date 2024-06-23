@@ -1,0 +1,66 @@
+.modal{
+    &.show{
+        &.modal-slim {
+    
+            .modal-header {
+                padding-bottom: 0.5rem;
+            }
+        
+            .modal-body {
+                padding-top: 0.5rem;
+            }
+        
+        }
+        
+        .modal-dialog{
+            
+            // Modal Size Large, XL and XXL
+            &.modal-20w {
+                width: 20%;
+                max-width: none !important;
+            }
+            
+            &.modal-30w {
+                width: 30%;
+                max-width: none !important;
+            }
+            
+            &.modal-40w {
+                width: 40%;
+                max-width: none !important;
+            }
+            
+            &.modal-50w {
+                width: 50%;
+                max-width: none !important;
+            }
+        
+            &.modal-60w {
+                width: 60%;
+                max-width: none !important;
+            }
+        
+            &.modal-70w {
+                width: 70%;
+                max-width: none !important;
+            }
+
+            &.modal-80w {
+                width: 80%;
+                max-width: none !important;
+            }
+            
+            &.modal-90w {
+                width: 90%;
+                max-width: none !important;
+            }
+            
+            &.modal-95w {
+                width: 95%;
+                max-width: none !important;
+                margin-top: 1rem !important;
+                padding-top: 1.5rem !important;
+            }
+        }
+    }
+}

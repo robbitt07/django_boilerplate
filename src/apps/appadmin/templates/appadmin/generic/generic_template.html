@@ -1,0 +1,527 @@
+{% extends "base.html" %}
+{% load gas_utils %}
+{% load static %}
+{% block title %}Assign Custom Title for Tab{% endblock %}
+{% block content %}
+<p>
+    <a class="text-muted pb-2" href="#">
+        <span style="display: inline-flex; align-items: center;">
+            <i class="fas fa-angle-double-left fa-lg"></i>&nbsp;Back to <>
+        </span>
+    </a>
+</p>
+<h4>
+    {{ object }} Shipment - {{ object.source }}
+    <a class="text-muted" href="{{ object.get_update_url }}" data-toggle="tooltip" title="Edit <Object>">
+        <i class="fas fa-edit" ></i>
+    </a>
+</h4>
+
+<h5>
+    `Object`s
+    <a class="text-muted" href="#" title="Add/Create <Object>">
+        <i class="fas fa-plus"></i>
+    </a>
+</h5>
+<div class="row">
+    <div class="col-6">
+        <h3>Cards</h3>
+        <div class="card">
+            <div class="card-body">
+                <div class="card-title">
+                    <h4>Amazing Card</h4>
+                </div>
+                <p>
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                </p>
+
+                <hr>
+                <p>List Group</p>
+                <ul class="list-group list-group-flush" style="font-size: medium;">
+                    <li class="list-group-item compressed">
+                        Customer: <strong>3M Chemical</strong>
+                    </li>
+                    <li class="list-group-item compressed">
+                        Revenue: <strong>$ 3.4M</strong>
+                    </li>
+                    <li class="list-group-item compressed">
+                        GP: <strong>$521k</strong>
+                    </li>
+                </ul>
+            </div>
+            <div class="card-footer">
+                <div class="stats">
+                    Created by: Admin
+                    <span class="float-right">
+                        Oct 8, 2021
+                    </span>
+                </div>
+            </div>
+        </div>
+        <h3>Basic Table</h3>
+        <div class="card">
+            <div class="card-body">
+                <div class="table-responsive-lg">
+                    <table class="table table-hover table-sm">
+                        <caption>Simple HTML Table</caption>
+                        <thead>
+                            <th class="text-center">BOL</th>
+                            <th class="text-center">Customer</th>
+                            <th class="text-center">Pickup</th>
+                            <th class="text-center">Created On</th>
+                        </thead>
+                        <tbody>
+                            {% for object in table_data %}
+                            <tr>
+                                <td class="text-center">{{ object.bol_num }}</td>
+                                <td class="text-center">{{ object.customer }}</td>
+                                <td class="text-center" title="{{ object.pickup_date|long_datetime }}">
+                                    {{ object.pickup_date|short_datetime }}
+                                </td>
+                                <td class="text-center" title="{{ object.created_on|long_datetime }}">
+                                    {{ object.created_on|short_datetime }}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <h3>Key/Value or List Display Table</h3>
+        <p>
+            Key/Value or List display tables are intended to display key/value style data
+            listed in an unordered list.
+        </p>
+        <div class="card">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover table-sm list-table">
+                        <thead>
+                            <th colspan="2">Load Stats</th>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>BOL:</td>
+                                <td>123412344132</td>
+                            </tr>
+                            <tr>
+                                <td>Carrier Name:</td>
+                                <td>Some Carrier Name</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <p>Key/Value Inline</p>
+        <div class="card">
+            <div class="card-body">
+                <span class="text-muted mr-1">MC Number:</span>
+                <span>950728</span>
+                <br>
+                <span class="text-muted mr-1">DOT Number:</span>
+                <span>3207337</span>
+                <br>
+            </div>
+        </div>
+        <h3>Timeline</h3>
+        <ul class="simple-timeline">
+            <li class="event" data-date="06/01 10:00 am">
+                <h6 class="text-muted">
+                    <strong style="color: #727cf5;">Milestone: </strong> 
+                    Some random milestone to be solved
+                </h6>
+                <p>
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                    <span class="float-right">
+                        <small>Sample Footer</small>
+                    </span>
+                </p>
+            </li>
+            <li class="event" data-date="07/01 10:00 am">
+                <h6 class="text-muted">
+                    <strong style="color: #727cf5;">Milestone: </strong> 
+                    Some other random milestone to be solved
+                </h6>
+                <p>
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                    <span class="float-right pb-2">
+                        <small>Sample Footer</small>
+                    </span>
+                </p>
+            </li>
+        </ul>
+        <h3>Route Path</h3>
+        <ul class="route-path">
+            <li class="origin-metro">
+                <span></span>
+                <h3 class="text-muted">
+                    Kansas City, MO
+                </h3>
+            </li>
+            <li class="stop" mileage="21 mi DH">
+                <span class="route-step"></span>
+                <h3 class="text-muted">
+                    Olathe, KS
+                </h3>
+            </li>
+            <li class="stop" mileage="561 mi">
+                <span class="route-step"></span>
+                <h3 class="text-muted">
+                    Nashville, TN
+                </h3>
+            </li>
+            <li class="stop" mileage="230 mi">
+                <h3 class="text-muted">
+                    Atlanta, GA
+                </h3>
+            </li>
+            <li class="destination-metro" mileage="11 mi DH">
+                <span></span>
+                <h3 class="text-muted">
+                    Duluth, GA
+                </h3>
+            </li>
+        </ul>
+    </div>
+	<div class="col-6">
+        <h3>Buttons</h3>
+        <div class="card">
+            <div class="card-body">
+                <hr>
+                <p>Outline - Round (Default)</p>
+                <button class="btn btn-primary btn-outline btn-round" type="submit">Primary</button>
+                <button class="btn btn-secondary btn-outline btn-round" type="submit">Secondary</button>
+                <button class="btn btn-warning btn-outline btn-round" type="submit">Warning</button>
+                <button class="btn btn-danger btn-outline btn-round" type="submit">Error/Danger</button>
+                <hr>
+                <p>Filled - Round (Secondary)</p>
+                <button class="btn btn-primary btn-round" type="submit">Primary</button>
+                <button class="btn btn-secondary btn-round" type="submit">Secondary</button>
+                <button class="btn btn-warning btn-round" type="submit">Warning</button>
+                <button class="btn btn-danger btn-round" type="submit">Error/Danger</button>
+                <hr>
+                <p>Outline (3rd Option when applicable)</p>
+                <button class="btn btn-primary" type="submit">Primary</button>
+                <button class="btn btn-secondary" type="submit">Secondary</button>
+                <button class="btn btn-warning" type="submit">Warning</button>
+                <button class="btn btn-danger" type="submit">Error/Danger</button>
+                <hr>
+                <p>Link Buttons</p>
+                <a href="#" class="btn btn-outline btn-primary btn-round" role="button">
+                   Primary
+                </a>
+                <a href="#" class="btn btn-outline btn-secondary btn-round" role="button">
+                   Secondary
+                </a>
+                <a href="#" class="btn btn-outline btn-warning btn-round" role="button">
+                   Warning
+                </a>
+                <a href="#" class="btn btn-outline btn-danger btn-round" role="button">
+                   Error/Danger
+                </a>
+                <hr>
+                <p>Button Groups (Perfect for Table Header Options)</p>
+                <div class="row">
+                    <div class="col">
+                        <div class="btn-group btn-round float-right" role="group">
+                            <button class="btn btn-outline btn-secondary btn-round" type="submit">Search</button>
+                            <a class="btn btn-outline btn-secondary btn-round" href="{% if request.GET.show_all == 'true' %}?show_all=false{% else %}?show_all=true{% endif %}{% for key, value in request.GET.items %}{% if key != 'show_all' %}&{{ key }}={{ value }}{% endif %}{% endfor %}">
+                                {% if request.GET.show_all == 'true' %}Show Active{% else %}Show All{% endif %}
+                                <input type="hidden" name='show_all' value="{{ request.GET.show_all }}" value="{% if request.GET.show_all == 'true' %}Hide Inactive{% else %}Show All{% endif %}" />
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <div class="btn-group btn-round btn-group-sm float-right" role="group">
+                            <button class="btn btn-outline btn-secondary btn-round" type="submit">Search</button>
+                            <a class="btn btn-outline btn-secondary btn-round" href="{% if request.GET.show_all == 'true' %}?show_all=false{% else %}?show_all=true{% endif %}{% for key, value in request.GET.items %}{% if key != 'show_all' %}&{{ key }}={{ value }}{% endif %}{% endfor %}">
+                                {% if request.GET.show_all == 'true' %}Show Active{% else %}Show All{% endif %}
+                                <input type="hidden" name='show_all' value="{{ request.GET.show_all }}" value="{% if request.GET.show_all == 'true' %}Hide Inactive{% else %}Show All{% endif %}" />
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <hr>
+                <p>Approval/Decline nullable Options</p>
+                <button class="btn btn-success btn-outline btn-sm" type="submit">
+                    <i class="fas fa-check icon-success" title="Approve"></i>
+                    Approve
+                </button>
+                <button class="btn btn-danger btn-outline btn-sm" type="submit">
+                    <i class="fas fa-ban icon-negative" title="Decline"></i>
+                    Decline
+                </button>
+                <p>Selected Option (Approval)</p>
+                <button class="btn btn-success btn-outline active btn-sm" type="submit">
+                    <i class="fas fa-check icon-white" title="Approve"></i>
+                    Approved
+                </button>
+                <button class="btn btn-danger btn-outline disabled btn-sm" type="submit">
+                    <i class="fas fa-ban disabled icon-negative" title="Decline"></i>
+                    Decline
+                </button>
+                <p>Selected Option (Declined)</p>
+                <button class="btn btn-success btn-outline disabled btn-sm" type="submit">
+                    <i class="fas fa-check icon-success" title="Approve"></i>
+                    Approve
+                </button>
+                <button class="btn btn-danger btn-outline active btn-sm" type="submit">
+                    <i class="fas fa-ban disabled icon-white" title="Decline"></i>
+                    Declined
+                </button>
+                <p>Approval/Decline nullable Option (Alternative)</p>
+                <i class="fas fa-thumbs-up fa-lg icon-success clickable disabled mr-1" title="Accept" aria-hidden="true"></i>
+                <i class="fas fa-thumbs-down fa-lg icon-danger clickable disabled" title="Decline" aria-hidden="true"></i>
+                <p>Approval/Decline nullable Option (Approval) (Alternative)</p>
+                <i class="fas fa-thumbs-up fa-lg icon-success clickable active mr-1" title="Accept" aria-hidden="true"></i>
+                <i class="fas fa-thumbs-down fa-lg icon-danger clickable disabled" title="Decline" aria-hidden="true"></i>
+                <p>Approval/Decline nullable Option (Declined) (Alternative)</p>
+                <i class="fas fa-thumbs-up fa-lg icon-success clickable disabled mr-1" title="Accept" aria-hidden="true"></i>
+                <i class="fas fa-thumbs-down fa-lg icon-danger clickable active" title="Decline" aria-hidden="true"></i>
+            </div>
+        </div>
+        <h3 class="text-center">Typography</h3>
+        <div class="card">
+            <div class="card-body">
+
+                <p>H Tags</p>
+                <h1>Header 1</h1>
+                <h2>Header 2</h2>
+                <h3>Header 3</h3>
+                <h4>Header 4</h4>
+                <h5>Header 5</h5>
+                <h6>Header 6</h6>
+                <hr>
+                <p>Span H Class - Inline Text</p>
+                <span class="font-h1">Header 1</span>
+                <br>
+                <span class="font-h2">Header 2</span>
+                <br>
+                <span class="font-h3">Header 3</span>
+                <br>
+                <span class="font-h4">Header 4</span>
+                <br>
+                <span class="font-h5">Header 5</span>
+                <br>
+                <span class="font-h6">Header 6</span>
+                <br>
+            </div>
+        </div>
+        <h3 class="text-center">Icons</h3>
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-lg-3">
+                        Loading: <i class="fas fa-sync fa-spin icon-primary"></i>
+                        <br>
+                        Loading Large: <i class="fas fa-sync fa-spin fa-2x icon-primary mx-1"></i>
+                        <br>
+                        Improving: <i class="fas fa-arrow-up icon-positive" title="Max"></i>
+                        <br>
+                        Declining: <i class="fas fa-arrow-down icon-negative" title="Min"></i>
+                        <br>
+                        No Change: <i class="fas fa-equals"></i>
+                        <br>
+                        Check: <strong style="color:green">✓</strong> 
+                        <br>
+                        Check Alt: <i class="fas fa-check"></i>
+                        <br>
+                        X: <span style="color:red;">×</span>
+                        <br>
+                        X Alt: <i class="fas fa-times" style="color:red;"></i>
+                        <br>
+                        Exclude/Ban: <i class="fas fa-ban" aria-hidden="true"></i>
+                        <br>
+                        Approve: <i class="fas fa-thumbs-up icon-positive" aria-hidden="true"></i>
+                        <br>
+                        Decline: <i class="fas fa-thumbs-down icon-negative" aria-hidden="true"></i>
+                        <br>
+                        Warning: <i class="fas fa-exclamation-triangle" style="color: orange;" data-html="true"></i>
+                        <br>
+                        Toggle On: <i class="fa fa-toggle-on" aria-hidden="true"></i>
+                        <br>
+                        Toggle Off: <i class="fa fa-toggle-off" aria-hidden="true"></i>
+                        <br>
+                        Calculated: <i class="fa fa-calculator"></i>
+                        <br>
+                        Enable Notification: <i class="fas fa-bell"></i>
+                        <br>
+                        Disable Notification: <i class="fa fa-bell-slash" aria-hidden="true"></i>
+                        <br>
+                        Timeline/Time Series (TODO: Consolidate w/ Time): <i class="fas fa-clock"></i>
+                        <br>
+                        Bookmark/Save: <i class="far fa-bookmark"></i>
+                        <br>
+                        Inbox: <i class="fas fa-inbox"></i>
+                        <br>
+                    </div>
+                    <div class="col-lg-3">
+                        Create: <i class="fas fa-plus"></i>
+                        <br>
+                        Export: <i class="fa fa-download"></i>
+                        <br>
+                        CSV Export: <i class="fas fa-file-csv"></i>
+                        <br>
+                        Excel Export: <i class="fas fa-file-excel"></i>
+                        <br>
+                        Generic File: <i class="fas fa-file" aria-hidden="true"></i>
+                        <br>
+                        Contract File: <i class="fas fa-file-contract"></i>
+                        <br>
+                        Import File: <i class="fas fa-file-import"></i>
+                        <br>
+                        Edit: <i class="fas fa-edit"></i>
+                        <br>
+                        Advanced/Admin Edit: <i class="fas fa-cogs"></i>
+                        <br>
+                        Delete: <i class="far fa-trash-alt"></i>
+                        <br>
+                        Link/Sync: <i class="fas fa-link"></i>
+                        <br>
+                        Balance: <i class="fas fa-balance-scale"></i>
+                        <br>
+                        History: <i class="fas fa-history"></i>
+                        <br>
+                        External Open: <i class="fas fa-external-link-alt"></i>
+                        <br>
+                        Link / Associate: <i class="fa fa-link" aria-hidden="true"></i>
+                        <br>
+                        Search: <i class="fa fa-search" aria-hidden="true"></i>
+                        <br>
+                        User/Customer Group: <i class="fa fa-users" aria-hidden="true"></i>
+                        <br>
+                        Exclude User/Customer: <i class="fas fa-user-times"></i>
+                        <br>
+                        Add/Readmit User/Customer: <i class="fa fa-user-plus" aria-hidden="true"></i>
+                        <br>
+                        Deadline/Due Date: <i class="fa fa-hourglass-end" aria-hidden="true"></i>
+                        <br>
+                        Fuel Table/Fuel Price: <i class="fas fa-gas-pump"></i>
+
+                    </div>
+                    <div class="col-lg-3">
+                        Raise Hand (Make Exception): <i class="fas fa-hand-paper text-muted"></i>
+                        <br>
+                        Brain: <i class="fas fa-brain"></i>
+                        <br>
+                        Truck (Service): <i class="fas fa-truck mr-1"></i>
+                        <br>
+                        Miles (Mileage): <i class="fas fa-tachometer-alt"></i>
+                        <br>
+                        Time (Transport Time): <i class="far fa-clock"></i>
+                        <br>
+                        Day of Week/Schedule: <i class="far fa-calendar-alt"></i>
+                        <br>
+                        Warehouse/Place: <i class="fas fa-warehouse"></i>
+                        <br>
+                        Truck Loading (Live Load): <i class="fas fa-truck-loading"></i>
+                        <br>
+                        <span class="fa-layers fa-fw">
+                            <i class="fas fa-truck-loading fa-lg"></i>
+                            <i class="fas fa-info-circle text-muted" data-fa-transform="up-8 right-14" style="opacity: 80%;"></i>
+                        </span>
+                        Trailer Drop (Drop Trailer): <i class="fas fa-truck-loading fa-flip-horizontal"></i>
+                        <br>
+                        Weight: <i class="fas fa-weight-hanging" title="Weight"></i>
+                        <br>
+                        Pallet (Commodity/Freight Moved): <i class="fas fa-pallet" title="Commodity"></i>
+                        <br>
+                        Road: <i class="fas fa-road"></i>
+                        <br>
+                        Ellipsis-V: <i class="fas fa-ellipsis-v"></i>
+                        <br>
+                        Ellipsis-H: <i class="fas fa-ellipsis-h"></i>
+                        <br>
+                        Double Left: <i class="fas fa-angle-double-left"></i>
+                        <br>
+                        Double Right: <i class="fas fa-angle-double-right"></i>
+                        <br>
+                        Caret Right: <i class="fas fa-caret-up fa-rotate-90"></i>
+                        <br>
+                        Caret Left: <i class="fas fa-caret-up fa-rotate-180"></i>
+                        <br>
+                        Detail: <i class="fas fa-info-circle"></i>
+                        <br>
+                        Help/Question: <i class="fas fa-question text-muted"></i>
+                        <br>
+                        Navigate/Route: <i class="fas fa-directions"></i>
+                    </div>
+                    <div class="col-lg-3">
+                        Dolla Dolla Bills Yall (Revenue): <i class="fas fa-dollar-sign"></i>
+                        <br>
+                        Margin/GP: <i class="fas fa-hand-holding-usd"></i>
+                        <br>
+                        Line/Instance Count: <i class="fas fa-stream"></i>
+                        <br>
+                        Arrrow (Lane): <i class="fa fa-arrow-right" aria-hidden="true"></i>
+                        <br>
+                        Filter: <i class="fas fa-filter" aria-hidden="true"></i>
+                        <br>
+                        Copy/Replicate: <i class="fas fa-copy" aria-hidden="true"></i>
+                        <br>
+                        Location: <i class="fas fa-map-marker-alt"></i>
+                        <br>
+                        Relationship: <i class="fas fa-handshake"></i>
+                        <br>
+                        Call: <i class="fas fa-phone"></i>
+                        <br>
+                        Inspect: <i class="fas fa-glasses"></i>
+                        <br>
+                        Page Views/Opens: <i class="fas fa-eye"></i>
+                        <br>
+                        Redo: <i class="fas fa-redo"></i>
+                        <br>
+                        Undo/Revert: <i class="fa fa-undo" aria-hidden="true"></i>
+                        <br>
+                        Flag: <i class="fa fa-flag" aria-hidden="true"></i>
+                        <br>
+                        Publish: <i class="fas fa-globe"></i>
+                        <br>
+                        Notify: <i class="fas fa-paper-plane"></i>
+                        <br>
+                        Deploy/Launch/Start: <i class="fas fa-plane"></i>
+                        <br>
+                        Snapshot: <i class="fa fa-camera" aria-hidden="true"></i>
+                        <br>
+                        User Feedback Love: <i class="far fa-laugh" style="color:green"></i>
+                        <br>
+                        User Feedback Like: <i class="far fa-smile" style="color:blue"></i>
+                        <br>
+                        User Feedback Meh: <i class="far fa-meh-rolling-eyes" style="color: #ECB276"></i>
+                        <br>
+                        User Feedback Dislike: <i class="far fa-frown" style="color:red"></i>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <h3 class="text-center">Steps</h3>
+        <div class="card">
+            <div class="card-body">
+                <div class="step-wrapper">
+                    <div class="step-item completed">
+                        <div class="step-counter">1</div>
+                        <div class="step-name">First</div>
+                    </div>
+                    <div class="step-item completed">
+                        <div class="step-counter">2</div>
+                        <div class="step-name">Second</div>
+                    </div>
+                    <div class="step-item active">
+                        <div class="step-counter">3</div>
+                        <div class="step-name">Third</div>
+                    </div>
+                    <div class="step-item">
+                        <div class="step-counter">4</div>
+                        <div class="step-name">Forth</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

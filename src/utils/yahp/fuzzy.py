@@ -7,7 +7,7 @@ def ngrams(field, n=3):
         
 
 def tversky_index(text1, text2, a=None, b=None, q=3, pad=True):
-    if text1 in {None, ''} or text2 in {None, ''}:
+    if text1 in {None, ""} or text2 in {None, ""}:
         return 0
     ngram1, ngram2 = set(ngrams(text1, q)), set(ngrams(text2, q))
     agree_tot = len(ngram1.intersection(ngram2))
@@ -27,7 +27,7 @@ def tversky_index(text1, text2, a=None, b=None, q=3, pad=True):
     try:
         return float(agree_tot)/(agree_tot+a*v1+b*v2)
     except:
-        print(f'[tversky_index] error with `{text1}` | `{text2}`')
+        print(f"[tversky_index] error with `{text1}` | `{text2}`")
         return 0
 
 

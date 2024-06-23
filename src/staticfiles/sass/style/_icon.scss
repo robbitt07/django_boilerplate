@@ -1,0 +1,61 @@
+
+i.fa,
+i.fas,
+i.far {
+    &.icon-positive {
+        color: darkgreen;
+    }
+
+    &.icon-negative {
+        color: crimson;
+    }
+
+    &.icon-success {
+        color: $success-color;
+
+        &.active {
+            color: #1e7e34
+        }
+    }
+
+    &.icon-danger {
+        color: $danger-color;
+
+        &.active {
+            color: #bd2130
+        }
+    }
+
+    &.icon-neutral {
+        color: #6c757d !important;
+    }
+
+    &.icon-primary {
+        color: $blue;
+    }
+
+    &.icon-secondary {
+        color: $secondary;
+    }
+
+
+    &.icon-warning {
+        color: $orange;
+    }
+
+    &.icon-white {
+        color: #fff;
+    }
+
+    &:hover:not(:disabled) {
+        opacity: 50% !important;
+    }
+
+    &.disabled {
+        opacity: 50%;
+
+        &:hover {
+            opacity: 100% !important;
+        }
+    }
+}

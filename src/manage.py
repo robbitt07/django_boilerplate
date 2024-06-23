@@ -1,9 +1,14 @@
 #!/usr/bin/env python
+from decouple import config
 import os
 import sys
 
 if __name__ == '__main__':
-    os.environ.setdefault('DJANGO_SETTINGS_MODULE', '<django_package_name>.settings.development')
+    if config("DEBUG", cast=bool, default=True):
+        os.environ.setdefault("DJANGO_SETTINGS_MODULE", "yabpt.settings.development")
+    else:
+        os.environ.setdefault("DJANGO_SETTINGS_MODULE", "yabpt.settings.production")
+        
     try:
         from django.core.management import execute_from_command_line
     except ImportError as exc:

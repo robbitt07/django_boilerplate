@@ -1,0 +1,47 @@
+<script>
+
+    const defaultCallback = (event, ui, id) => {
+        if (ui.item.id !== null) { $(`#${id}_ref`).val(ui.item.id); }
+    }
+
+    const autoComplete = (id, url, params, dataType, callback) => {
+        $(function() { 
+            $(`#${id}`).autocomplete({
+                autoFocus: true,
+                minLength: 3,
+                source: function( request, response ) {
+                    $.ajax({
+                        url: url,
+                        dataType: dataType,
+                        data: {q: request.term, limit: 10, ...params },
+                        success: function (data) {
+                            if (data.length === 0) {
+                                var array = [{ value: "No Results Found", id: null }]
+                            } else {
+                                var array = data.map(result => ({
+                                    value: result?.label || result?.name, id: result.id
+                                }));
+                            }
+                            response(array);
+                        },
+                        error: function (err) { console.log(err) }
+                    });
+                },
+                select: function( event, ui ) {
+                    if (callback !== undefined) {
+                        callback(event, id)
+                    } else {
+                        defaultCallback(event, ui, id)
+                    }
+                },
+                open: function() {
+                    $( this ).removeClass( "ui-corner-all" ).addClass( "ui-corner-top" );
+                },
+                close: function() {
+                    $( this ).removeClass( "ui-corner-top" ).addClass( "ui-corner-all" );
+                }
+            });
+        });
+    }
+    
+</script>

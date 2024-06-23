@@ -1,0 +1,43 @@
+<script>
+  // Updates User Options based on selection 
+    const updateUserOptions = (data, refresh, skipMessage) => {
+
+      // Get CSFR Token
+      var csrfToken = document.cookie.split('; ').find(row => row.startsWith('csrftoken')).split('=')[1];
+      $.ajax({
+        url: `/api/v1/user-preferences/`,
+        type: "POST",
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': csrfToken
+        },
+        data: JSON.stringify(data),
+        dataType: "json",
+        credentials: 'include',
+        success: function (data) {
+          if (skipMessage !== true) {
+            // Add Message
+            $('#message').first().append(
+              `<div class="alert alert-success mb-2" role="alert" data-notify="container">
+                      <button type="button" class="close" data-dismiss="alert" aria-label="Close" aria-hidden="true">
+                          <i class="nc-icon nc-simple-remove"></i>
+                      </button>
+                      <span data-notify="container">User Options updated</span>
+                  </div>`)
+            // Hide Message after 5 seconds
+            $(".alert").delay(5000).slideUp(300, function () {
+              $(this).alert('close');
+            });
+          }
+
+          // Reload Page
+          if (refresh === true) {
+            window.location.reload()
+          }
+        },
+        failure: function (errMsg) {
+          console.log("Error", errMsg);
+        }
+      });
+    }
+</script>

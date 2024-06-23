@@ -1,0 +1,81 @@
+
+.font-h1 {
+    font-size: $font-size-h1;
+}
+
+.font-h2 {
+    font-size: $font-size-h2;
+}
+
+.font-h3 {
+    font-size: $font-size-h3;
+    margin: 20px 0 10px;
+}
+
+.font-h4 {
+    font-size: $font-size-h4;
+    line-height: 30px;
+}
+
+.font-h5 {
+    font-size: $font-size-h5;
+    margin-bottom: 15px;
+}
+
+.font-h6 {
+    font-size: $font-size-h6;
+    font-weight: $font-weight-bold;
+    text-transform: uppercase;
+}
+
+.strong {
+    font-weight: bolder;
+}
+
+.clickable {
+    cursor: pointer;
+}
+
+.no-underline {
+    text-decoration: none;
+}
+
+.no-underline:link {
+    text-decoration: none;
+}
+
+.font-positive {
+    color: darkgreen;
+}
+
+.font-negative {
+    color: crimson;
+}
+
+.font-success {
+    color: $success-color;
+}
+
+.font-danger {
+    color: $danger-color;
+}
+
+.font-neutral {
+    color: #6c757d !important;
+}
+
+.font-primary {
+    color: $blue;
+}
+
+.font-secondary {
+    color: $secondary;
+}
+
+.font-warning {
+    color: $orange;
+}
+
+.font-white {
+    color: #fff;
+}

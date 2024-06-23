@@ -11,7 +11,7 @@ def create_customer(name: str,
         raise ValueError("Customer Name must be less than 100 characters")
 
     # Generate Name Hash
-    name_hash = f"cust_{sha1(str(name).encode('utf-8')).hexdigest()[0:14]}"
+    name_hash = f"cust_{sha1(str(name).encode("utf-8")).hexdigest()[0:14]}"
 
     # Create Customer
     # TODO: Additional Steps?

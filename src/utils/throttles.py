@@ -40,7 +40,7 @@ class EventRateThrottle(UserRateThrottle):
 
     def throttle_success(self):
         """
-        Inserts the current request's timestamp along with the key
+        Inserts the current request"s timestamp along with the key
         into the cache.
         """
         self.history.update({"count": self.history.get("count", 0) + 1})

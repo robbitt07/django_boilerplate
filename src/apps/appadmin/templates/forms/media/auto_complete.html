@@ -1,0 +1,14 @@
+{% include "forms/js/auto_complete.html" %}
+{% for field in auto_complete_fields %}
+    <script>
+        autoComplete(`{{field.id}}`, `{{field.url}}`, JSON.parse(`{{field.params}}`, `{{field.data_type}}`));
+
+        $(`#{{field.id}}`).on("keyup", function () {
+            if ($(this).val() === "") { $(`#{{field.id}}_ref`).val(""); }
+        });
+        
+        $(`#{{field.id}}`).on("keydown", function () {
+            if ($(this).val() === "") { $(`#{{field.id}}_ref`).val(""); }
+        });
+    </script>
+{% endfor %}

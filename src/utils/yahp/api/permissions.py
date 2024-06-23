@@ -19,7 +19,7 @@ def get_active_user(tenant_id):
     # Build a list of user ids from that query
     for session in sessions:
         data = session.get_decoded()
-        uid_list.append(data.get('_auth_user_id', None))
+        uid_list.append(data.get("_auth_user_id", None))
 
     # Query all logged in users based on id list
     return User.objects.filter(id__in=uid_list, tenant_id=tenant_id).first()
@@ -56,7 +56,7 @@ class UserTenantPermission(BasePermission):
 
     """
 
-    message = 'Incorrect client code provided'
+    message = "Incorrect client code provided"
 
     def has_permission(self, request, view):
         ## Check for cross tenant requests
@@ -77,20 +77,20 @@ class UserTenantExternalPermission(BasePermission):
 
     """
 
-    message = 'Incorrect client code provided'
+    message = "Incorrect client code provided"
 
     def has_permission(self, request, view):
         ## Check for cross tenant requests
         if request.tenant_id != request.user.tenant_id:
             return False
 
-        if hasattr(view, 'internal'):
-            if view.internal & parse_bool(request.data.get('internal', False)):
+        if hasattr(view, "internal"):
+            if view.internal & parse_bool(request.data.get("internal", False)):
                 return True
 
         ## Validate User is granted API Access and 
         if not request.user.api_access:
-            self.message = 'User not authorized for API access'
+            self.message = "User not authorized for API access"
             return False
         ## Otherwise return valid request
         return True

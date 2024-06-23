@@ -9,7 +9,7 @@ def parse_bool(val: Union[bool, str]) -> bool:
 	if isinstance(val, bool):
 		return val
 	if isinstance(val, str):
-		if val in ('True', 'true'):
+		if val in ("True", "true"):
 			return True
 	return False
 
@@ -17,7 +17,7 @@ def parse_bool(val: Union[bool, str]) -> bool:
 
 def get_if_int(d,k,default=None):
 	"""
-	Helper function to parse integers from a dictionary, primary for passing db keys when empty value may be ''
+	Helper function to parse integers from a dictionary, primary for passing db keys when empty value may be ""
 	"""
 	v = str(d.get(k))
 	if v.isdigit():
@@ -30,18 +30,18 @@ def parse_commas_sep_codes(val):
 	"""
 	val_list = []
 	if isinstance(val, str):
-		if val != '':
-			val_list = val.split(',')
+		if val != "":
+			val_list = val.split(",")
 	return val_list
 
 def strip_dictionary_value_whitespace(d,force_str=False,inplace=True):
 	"""
 	Helper function to strip white space off dictionary values
 	d = {
-		'a' : ' this ',
-		'b' : 'that ',
-		'c' : None,
-		'd' : 5
+		"a" : " this ",
+		"b" : "that ",
+		"c" : None,
+		"d" : 5
 	}
 	strip_dictionary_value_whitespace(d=d)
 	strip_dictionary_value_whitespace(d=d,force_str=True)
@@ -55,15 +55,15 @@ def strip_dictionary_value_whitespace(d,force_str=False,inplace=True):
 		d.update({k : v.strip() for k,v in d.items() if isinstance(v,str)})
 	return d
 
-def exclude_by_value(d,exclude_ls=[None,''],inplace=True):
+def exclude_by_value(d,exclude_ls=[None,""],inplace=True):
 	""" 
 	Helper function to delete dictionary key-value pairs with specified values
 	d = {
-		'a' : '',
-		'b' : None,
-		'c' : 'c',
-		'd' : 'de',
-		'e' : 52
+		"a" : "",
+		"b" : None,
+		"c" : "c",
+		"d" : "de",
+		"e" : 52
 	}
 	exclude_by_value(d)
 	exclude_by_value(d,inplace=False)

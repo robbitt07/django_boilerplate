@@ -44,10 +44,10 @@ class Customer(models.Model):
 	updated_on = models.DateTimeField(auto_now=True)
 
 	class Meta:
-		db_table = 'cust_customer'
-		verbose_name = 'Customer'
-		verbose_name_plural = 'Customers'
-		ordering = ('pk',)
+		db_table = "cust_customer"
+		verbose_name = "Customer"
+		verbose_name_plural = "Customers"
+		ordering = ("pk",)
 
 	def get_or_create_integration_key(self) -> str:
 		if self.integration_key is not None:
@@ -59,7 +59,7 @@ class Customer(models.Model):
 		# TODO: Customer Integration that routes to the correct customer creation 
 		# integration = CustomerIntegration(customer_obj=self)
 		# return integration.create_customer()
-		return 'key'
+		return "key"
 		
 	@property
 	def _active_subscription(self):
@@ -90,12 +90,12 @@ class Customer(models.Model):
 
 @receiver(post_save, sender=Customer)
 def customer_post_save_handler(sender, instance, **kwargs):
-	cache.delete(f'customer_config:{instance.pk}')
+	cache.delete(f"customer_config:{instance.pk}")
 
 
 @receiver(post_delete, sender=Customer)
 def customer_post_delete_handler(sender, instance, **kwargs):
-	cache.delete(f'customer_config:{instance.pk}')
+	cache.delete(f"customer_config:{instance.pk}")
 
 
 # User Manager
@@ -112,13 +112,13 @@ class UserManager(BaseUserManager):
 		Creates and saves a User with the given email and password.
 		"""
 		if not email:
-			raise ValueError('Users must have an email address')
+			raise ValueError("Users must have an email address")
 
 		user = self.model(
 			email=self.normalize_email(email),
 			customer_id=customer_id,
-			first_name=kwargs.get('first_name', None),
-			last_name=kwargs.get('last_name', None)
+			first_name=kwargs.get("first_name", None),
+			last_name=kwargs.get("last_name", None)
 		)
 
 		user.set_password(password)
@@ -166,14 +166,14 @@ class UserManager(BaseUserManager):
 		Creates and saves a superuser with the given email and password.
 		"""
 		if customer_id is None:
-			raise ValueError('Create tenant superuser requires tenant code or pk'
+			raise ValueError("Create tenant superuser requires tenant code or pk"
 		)
 		user = self.create_user(
 			email,
 			password=password,
 			customer_id=customer_id,
-			first_name=kwargs.get('first_name', None),
-			last_name=kwargs.get('last_name', None)
+			first_name=kwargs.get("first_name", None),
+			last_name=kwargs.get("last_name", None)
 		)
 		user.customer_staff = True
 		user.customer_admin = True
@@ -186,11 +186,11 @@ class User(AbstractBaseUser):
   	# Override default id
 	id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
 	customer = models.ForeignKey(
-		to=Customer, on_delete=models.PROTECT, related_name='users', null=True,
+		to=Customer, on_delete=models.PROTECT, related_name="users", null=True,
 		blank=True
 	)
 	email = models.EmailField(
-		verbose_name='email address', max_length=255, unique=True,
+		verbose_name="email address", max_length=255, unique=True,
 	)
 	first_name = models.CharField(max_length=100, blank=True, null=True)
 	last_name = models.CharField(max_length=100, blank=True, null=True)
@@ -206,7 +206,7 @@ class User(AbstractBaseUser):
 	internal_staff = models.BooleanField(default=False) # Internal Global Staff User
 	internal_admin = models.BooleanField(default=False) # Internal Global Admin User
 
-	USERNAME_FIELD = 'email'
+	USERNAME_FIELD = "email"
 	REQUIRED_FIELDS = [] # Email & Password are required by default.
 
 	created_on = models.DateTimeField(auto_now_add=True)
@@ -215,10 +215,10 @@ class User(AbstractBaseUser):
 	objects = UserManager()
 
 	class Meta:
-		db_table = 'cust_user'
-		verbose_name = 'User'
-		verbose_name_plural = 'Users'
-		ordering = ('pk',)
+		db_table = "cust_user"
+		verbose_name = "User"
+		verbose_name_plural = "Users"
+		ordering = ("pk",)
 
 	@property
 	def username(self):
@@ -283,10 +283,10 @@ class Subscription(models.Model):
 	modified_on = models.DateTimeField(auto_now=True)
 
 	class Meta:
-		db_table = 'cust_subscription'
-		verbose_name = 'Subscription'
-		verbose_name_plural = 'Subscriptions'
-		ordering = ('pk',)
+		db_table = "cust_subscription"
+		verbose_name = "Subscription"
+		verbose_name_plural = "Subscriptions"
+		ordering = ("pk",)
 
 	def __str__(self):
 		return f"{str(self.code)} - {str(self.integration)}"
@@ -307,10 +307,10 @@ class CustomerSubscription(models.Model):
 	modified_on = models.DateTimeField(auto_now=True)
 
 	class Meta:
-		db_table = 'cust_customer_subscription'
-		verbose_name = 'Customer Subscription'
-		verbose_name_plural = 'Customer Subscriptions'
-		ordering = ('pk',)
+		db_table = "cust_customer_subscription"
+		verbose_name = "Customer Subscription"
+		verbose_name_plural = "Customer Subscriptions"
+		ordering = ("pk",)
 
 	@property
 	def is_active(self):
@@ -326,12 +326,12 @@ class CustomerSubscription(models.Model):
 
 @receiver(post_save, sender=CustomerSubscription)
 def customer_subscription_post_save_handler(sender, instance, **kwargs):
-	cache.delete(f'customer_config:{instance.customer_id}')
+	cache.delete(f"customer_config:{instance.customer_id}")
 
 
 @receiver(post_delete, sender=CustomerSubscription)
 def customer_subscription_post_delete_handler(sender, instance, **kwargs):
-	cache.delete(f'customer_config:{instance.customer_id}')
+	cache.delete(f"customer_config:{instance.customer_id}")
 
 
 class CustomerUsage(models.Model):
@@ -340,7 +340,7 @@ class CustomerUsage(models.Model):
 	USAGE_UNIT_TYPE_OPTIONS = (
 		("<>", "Usage Unit"),
 	)
-	customer = models.ForeignKey(Customer, on_delete=models.PROTECT, related_name='usage')
+	customer = models.ForeignKey(Customer, on_delete=models.PROTECT, related_name="usage")
 	observation_datetime = models.DateTimeField()
 	unit_type = models.CharField(max_length=10, choices=USAGE_UNIT_TYPE_OPTIONS)
 	units = models.IntegerField(blank=True, null=True)
@@ -350,10 +350,10 @@ class CustomerUsage(models.Model):
 	modified_on = models.DateTimeField(auto_now=True)
 
 	class Meta:
-		db_table = 'cust_usage'
-		verbose_name = 'Customer Usage'
-		verbose_name_plural = 'Customers Usage'
-		ordering = ('pk',)
+		db_table = "cust_usage"
+		verbose_name = "Customer Usage"
+		verbose_name_plural = "Customers Usage"
+		ordering = ("pk",)
 
 	def __str__(self):
 		return f"{str(self.observation_datetime)}: {str(self.units)} ({str(self.unit_type)})"
