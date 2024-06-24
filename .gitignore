@@ -2,6 +2,15 @@
 project_name/media
 static-cdn-local/
 
+# React/Django
+src/staticfiles/react/**/*.js*
+src/staticfiles/react/**/*.css*
+src/staticfiles/react/media/*.svg
+src/staticfiles/react/media/*.woff
+src/staticfiles/react/media/*.woff2
+src/staticfiles/react/media/*.eot
+src/staticfiles/react/media/*.ttf
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
