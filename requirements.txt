@@ -9,7 +9,7 @@ djangorestframework-simplejwt==5.2.2
 drf-spectacular==0.26.4
 gevent==24.2.1
 holidays==0.38
-numpy==1.23.2
+numpy==1.26.4
 pandas==2.0.1
 postgres==3.0.0
 psycopg2==2.9.5
@@ -18,5 +18,6 @@ python-decouple==3.1
 pytz==2023.3
 Redis==5.0.2
 requests==2.31.0
+scipy==1.13.1
 tqdm==4.65.0
 waitress==3.0.0
