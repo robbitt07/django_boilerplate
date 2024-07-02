@@ -6,3 +6,8 @@ T = TypeVar('T')
 class Queryset(Generic[T]):
     """Django Queryset"""
     pass
+
+
+class User(Generic[T]):
+    """Django User"""
+    pass
