@@ -1,82 +1,57 @@
-
-from typing import List
-import django
 from django.utils import timezone
 
-import datetime
-import numpy as np
-import pandas as pd
+from datetime import datetime, date
 import pytz
+import pandas as pd
+import numpy as np
 import re
+from typing import Any, List, Optional, Union
+
+# TODO: Move to datetime
+LOCAL_TZ_KEY = timezone.get_current_timezone().key
+LOCAL_TZ = pytz.timezone(LOCAL_TZ_KEY)
 
 
-def list_remove_none(ls : List):
-	"""
-	Remove None Values from List
-	"""
-	return [x for x in ls if pd.notna(x)] or None
-
-def list_apply_to_non_none(ls : List, func : callable):
-	"""
-	Apply a Function to Provided List with None Values Removed
-
-	returns func(lst with Nones removed)
-	"""
-	ls = list_remove_none(ls=ls)
-	if ls is None:
-		return None
-	return func(ls)
+def localize_dt(dt: datetime) -> datetime:
+	return LOCAL_TZ.localize(dt=dt)
 
 
 def numeric_regex_sub(x): return re.sub("[^0-9.-]+", "", x)
 
 
-def remove_list_na(ls: List):
-	"""Remove NA Values from a List"""
-	return [x for x in ls if pd.notna(x)]
-
-
-def none_if_empty(ls: List, func: callable):
-	"""Return None if List is Empty"""
-	if len(ls) == 0:
+def parse_bool(val: Union[bool, str],
+               allow_none: bool = True,
+               true_values: set = {"true", "yes", "y"}) -> bool:
+	"""
+	Parse String or Boolean value to Boolean
+	"""
+	if val is None and allow_none:
 		return None
-	return func(ls)
+
+	if isinstance(val, bool):
+		return val
+	
+	if isinstance(val, str):
+		val = val.lower().strip()
+		if val in true_values:
+			return True
+
+	return False
 
 
-def unravel_list(ls):
-	"""Unravel List of Lists"""
-	return [x for sub_ls in ls for x in sub_ls]
-
-
-def parse_varchar(x, nullable=True, default=""):
+def parse_numeric(x,
+                  nullable: bool = True,
+                  default: float = 0.0,
+                  alpha_strict: bool = False):
 	"""
 	Test Cases
 	----------
-        parse_varchar("this")
-        parse_varchar("THAT")
-        parse_varchar(12.5)
-        parse_varchar(15659)
-        parse_varchar(None)
-	"""
-	if isinstance(x, str):
-		return x
-	if pd.isna(x):
-		if nullable:
-			return None
-		return default
-	return str(x)
-
-
-def parse_numeric(x, nullable=True, default=0, alpha_strict=False):
-	"""
-	Test Cases
-	----------
-        parse_numeric(23)
-        parse_numeric("23")
-        parse_numeric(np.int32(23))
-        parse_numeric(np.float32(23.1))
-        parse_numeric(23.2)
-        parse_numeric("23.2")
+		parse_numeric(23)
+		parse_numeric("23")
+		parse_numeric(np.int32(23))
+		parse_numeric(np.float32(23.1))
+		parse_numeric(23.2)
+		parse_numeric("23.2")
 	"""
 	if pd.isna(x):
 		if nullable:
@@ -101,31 +76,28 @@ def parse_numeric(x, nullable=True, default=0, alpha_strict=False):
 		return default
 
 
-def parse_integer(x, nullable=True, default=0):
+def parse_integer(x, nullable: bool = True, default: int = 0) -> Optional[int]:
 	"""
 	Test Cases
 	----------
-        parse_integer(23)
-        parse_integer("23")
-        parse_integer(np.int32(23))
-        parse_integer(np.float32(23.1))
-        parse_integer(23.2)
-        parse_integer("23.2")
+		parse_integer(23)
+		parse_integer("23")
+		parse_integer(np.int32(23))
+		parse_integer(np.float32(23.1))
+		parse_integer(23.2)
+		parse_integer("23.2")
 	"""
 	if pd.isna(x):
 		if nullable:
 			return None
 		return default
+
 	if isinstance(x, (int, float, np.int8, np.int16, np.int32, np.int64, np.float32, np.float64)):
 		return int(x)
+
 	if isinstance(x, str):
 		x = parse_numeric(x)
-		try:
-			return int(x)
-		except:
-			if nullable:
-				return None
-			return default
+
 	try:
 		return int(x)
 	except:
@@ -134,59 +106,13 @@ def parse_integer(x, nullable=True, default=0):
 		return default
 
 
-def parse_bool(x, nullable=True, default=False):
-	"""
-	Test Cases
-	----------
-		parse_bool(True)
-		parse_bool(False)
-		parse_bool("True")
-		parse_bool("False")
-		parse_bool("TRUE")
-		parse_bool("FALSE")
-		parse_bool("T")
-		parse_bool("t")
-		parse_bool("F")
-		parse_bool("f")
-		parse_bool("Y")
-		parse_bool("y")
-		parse_bool("1")
-		parse_bool("yes")
-		parse_bool("Yes")
-		parse_bool("YES")
-		parse_bool("n")
-		parse_bool("N")
-		parse_bool("no")
-		parse_bool("No")
-		parse_bool("NO")
-		parse_bool("0")
-	"""
-	if isinstance(x, bool):
-		return x
-	if isinstance(x, (int, np.int8, np.int16, np.int32, np.int64)):
-		x = int(x)
-		return x > 0
-	if isinstance(x, (float, np.float16, np.float32, np.float64)):
-		x = float(x)
-		return x > 0
-	if isinstance(x, str):
-		if x.lower() in ["yes", "y", "true", "t", "1"]:
-			return True
-		if x.lower() in ["no", "n", "false", "f", "0"]:
-			return False
-	if nullable:
-		return None
-	return default
-
-
-def required_parse_bool(x, default=False):
-	return parse_bool(x=x, nullable=False, default=default)
-
-
-def try_parsing_date(x: str) -> datetime.datetime:
+def try_parsing_date(x: str) -> datetime:
 	"""
 	String to Datetime parser with default Pandas parser then secondary know suboptimal formats
 	"""
+	if x is None:
+		return None
+
 	if x.isnumeric() and len(x) == 5:
 		x = x.zfill(6)
 
@@ -195,18 +121,19 @@ def try_parsing_date(x: str) -> datetime.datetime:
 	try:
 		return pd.to_datetime(x).to_pydatetime()
 	except:
-		for fmt in ("%m%d%y", "%m%d%Y", "%Y-%m-%d", "%d.%m.%Y", "%d/%m/%Y"):
+		fmts = (
+			"%m/%d/%Y %H:%M:%S:%f", "%m/%d/%Y %H:%M:%S", "%m%d%y", "%m%d%Y",
+			"%Y-%m-%d", "%d.%m.%Y", "%d/%m/%Y"
+		)
+		for fmt in fmts:
 			try:
-				return datetime.datetime.strptime(x, fmt)
+				return datetime.strptime(x, fmt)
 			except ValueError:
 				pass
-		raise ValueError("no valid date format found")
+		raise ValueError(f"no valid date format found={x}")
 
 
-def parse_date(x,
-               nullable: bool = True,
-               default: datetime.datetime = None,
-               local_tz: bool = False):
+def parse_date(x, nullable: bool = True, default: datetime = None):
 	"""
 	Test Cases
 	----------
@@ -224,7 +151,7 @@ def parse_date(x,
 		parse_date(datetime.datetime.now())
 		parse_date(datetime.date.today())
 	"""
-	if not isinstance(x, (str, datetime.datetime, datetime.date)):
+	if not isinstance(x, (str, datetime, date)):
 		x = str(x)
 
 	try:
@@ -232,8 +159,6 @@ def parse_date(x,
 		# Make Timezone Aware if not already
 		if dt.tzinfo is None:
 			dt = timezone.make_aware(dt, pytz.timezone("UTC"))
-		elif local_tz:
-			dt = dt.astimezone(timezone.get_current_timezone())
 		return dt.date()
 	except:
 		if nullable:
@@ -244,9 +169,9 @@ def parse_date(x,
 
 
 def parse_datetime(x,
-                   nullable: bool = True,
-                   default: datetime.datetime = None,
-                   local_tz: bool = False):
+				   nullable: bool = True,
+				   default: datetime = None,
+				   local_tz: bool = False):
 	"""
 	Test Cases
 	----------
@@ -264,7 +189,7 @@ def parse_datetime(x,
 		parse_date(datetime.datetime.now())
 		parse_date(datetime.date.today())
 	"""
-	if not isinstance(x, (str, datetime.datetime, datetime.date)):
+	if not isinstance(x, (str, datetime, date)):
 		x = str(x)
 
 	try:
@@ -272,11 +197,13 @@ def parse_datetime(x,
 		dt = try_parsing_date(x)
 		# Make Timezone Aware if not already
 		if local_tz:
-			dt = dt.replace(tzinfo=None).astimezone(timezone.get_current_timezone())
+			dt = LOCAL_TZ.localize(dt)
 		elif dt.tzinfo is None:
 			dt = timezone.make_aware(dt, pytz.timezone("UTC"))
 		return dt
-	except:
+	
+	except Exception as e:
+		print(str(e))
 		if nullable:
 			return None
 		elif default is None:
@@ -284,133 +211,60 @@ def parse_datetime(x,
 		return default
 
 
-def parse_time(x, nullable=True, default=None):
-	"""
-	Test Cases
-	----------
-		parse_time("2020-11-01")
-		parse_time("2020/11/01 4:00 PM")
-		parse_time("2020/11/01 4 PM")
-		parse_time("2020-11-01 12:00")
-		parse_time("2020-11-1 13:31")
-		parse_time("11-1-2020")
-		parse_time("11/1/2020")
-		parse_date("72121")
-		parse_date("103021")
-		parse_time(datetime.datetime.now())
-		parse_time(datetime.date.today())
-	"""
-	if not isinstance(x, (str, datetime.datetime, datetime.date, datetime.time)):
-		x = str(x)
-
+def parse_date_and_time(date_str: str, time_str: str, local_tz: bool = False) -> datetime:
+	if date_str is None:
+		return None
 	try:
-		dt = try_parsing_date(x)
-		dt = timezone.make_aware(dt, pytz.timezone("UTC"))
-		return dt.time()
+		date_obj = pd.to_datetime(date_str)
+		if date_obj is None:
+			return None
+		date_obj = date_obj.date()
+		time_obj = datetime.strptime(str(time_str or "").zfill(6), "%H%M%S").time()
+
+		dt_obj = datetime.combine(date_obj, time_obj)
+		if local_tz and dt_obj is not None:
+			dt_obj = LOCAL_TZ.localize(dt_obj)
+
+		return dt_obj
 	except:
-		if nullable:
-			return None
-		elif default is None:
-			default = timezone.now().time()
-		return default
+		print(date_str, time_str)
 
 
-FIELD_CLEANING_ROUTER = {
-	django.db.models.fields.CharField.__name__ : parse_varchar,
-	django.db.models.fields.TextField.__name__ : parse_varchar,
-	django.db.models.fields.DecimalField.__name__ : parse_numeric,
-	django.db.models.fields.IntegerField.__name__ : parse_integer,
-	django.db.models.fields.NullBooleanField.__name__ : parse_bool,
-	django.db.models.fields.BooleanField.__name__ : required_parse_bool,
-	django.db.models.fields.DateField.__name__ : parse_date,
-	django.db.models.fields.TimeField.__name__ : parse_time,
-	None : None,
-}
-
-def zip_code_regex_sub(z,nullable=True,default="unk",allow_aggregate_zip_code=False):
-	"""
-	Test Cases
-	----------
-		zip_code_regex_sub(54944.1)
-		zip_code_regex_sub("54944.0")
-		zip_code_regex_sub("1101")
-		zip_code_regex_sub("54944-0110")
-		zip_code_regex_sub("4944-0110")
-	"""
-	if pd.isna(z):
-		if nullable:
-			return None
-		return default
-	if isinstance(z, (int, float, np.int8, np.int16, np.int32, np.int64, np.float32, np.float64)):
-		z = parse_integer(z)
-	if not isinstance(z,str):
-		z = str(z)
-	if "." in z:
-		z = z.split(".")[0]
-	if "-" in z:
-		z = z.split("-")[0]
-	z = re.sub("[^0-9a-zA-Z-]+","",z)
-	if z.isnumeric():
-		if allow_aggregate_zip_code:
-			if len(z) <= 3:
-				return z.zfill(3)
-			return z.zfill(5)[:5]
-		else:
-			return z.zfill(5)[:5]
-	return z.upper()
-
-
-def check_handle_numeric_precision(x,max_digits,decimal_places,on_size_error="set_none",on_precision_error="coerce"):
-	"""
-	Validate Numerical Values Are Appropriate for Decimal Data Types
+def parse_array(val: str,
+				sep: str = ",",
+				parser: Optional[callable] = lambda x: x) -> List[Any]:
+	"""Parse Array
 
 	Parameters
-	-----------
-	x : float
-		Numeric value
-	max_digits : int 
-		Max digits for decimal field
-	decimal_places : int 
-		Max number of decimal places for decimal field
-	on_size_error : str
-		How to handle max_digit violation: "set_none", "coerce", or "raise_error"
-	on_precision_error : str
-		How to handle decimal_places violation: "set_none", "coerce", or "raise_error"
-	
+	----------
+	val : str
+		_description_
+	sep : str, optional
+		_description_, by default ","
+	parser : _type_, optional
+		_description_, by default lambdax:x
+
 	Returns
-	-----------
-	x : float
-		Decimal value
-	violates_max_digits : bool
-		x violates max_digits constraint
-	violates_decimal_places : bool
-		x violates decimal_places_contraint
+	-------
+	List[Any]
+		_description_
 	"""
-	violates_max_digits = None
-	violates_decimal_places = None
-	if pd.isna(x):
-		return None,violates_max_digits,violates_decimal_places
-	upper_bound = 10 ** (max_digits-decimal_places)
-	if int(np.abs(x)/upper_bound) != 0:
-		# x violated max_digits
-		violates_max_digits = True
-		if on_size_error == "coerce":
-			x = upper_bound - 1 / 10 ** decimal_places
-		elif on_size_error == "set_none":
-			return None,violates_max_digits,violates_decimal_places
-		else:
-			raise ValueError(f"Invalid value {x} for max_digits {max_digits}, decimal_places {decimal_places}")
-	else:
-		violates_max_digits = False
-	if x != round(x,4):
-		# x violated decimal_places
-		violates_decimal_places = True
-		if on_precision_error == "coerce":
-			x = round(x,4)
-		elif on_precision_error == "set_none":
-			return None,violates_max_digits,violates_decimal_places
-		else:
-			raise ValueError(f"Invalid value {x} for max_digits {max_digits}, decimal_places {decimal_places}")
-	else:
-		violates_decimal_places = False
-	return x,violates_max_digits,violates_decimal_places
+	return [parser(sub) for sub in val.split(sep)]
+
+
+def parse_list_integer(val: Any, sep: str = ",") -> List[int]:
+	"""Parse List of Interger
+
+	Parameters
+	----------
+	val : Any
+		Parameter Value
+	sep : str, optional
+		Seperator for spliting to list, by default ","
+
+	Returns
+	-------
+	List[int]
+		List of Integers 
+	"""
+	return parse_array(val=val, parser=parse_integer, sep=sep)

@@ -77,7 +77,7 @@ class CachedSerializer(object):
 
 		# `cached_obj`:<obj_name>:<id>:<serialized_type>:<context_hash>`
 		cache_key = (
-			f"cached_obj:{self.model_name}:{self.id}:{self.serializer_name}:{hash(frozenset(self.context)) if self.context else ""}"
+			f"cached_obj:{self.model_name}:{self.id}:{self.serializer_name}:{hash(frozenset(self.context)) if self.context else ''}"
 		)
 
 		# Get Cache or Update

@@ -1,40 +1,34 @@
-from django.core.validators import RegexValidator
 import re
 
 
-PHONE_REGEX = re.compile(r"[\(]?(\d{3})[\)]?"  # extract first three digits (0/1 first digit is international)
-                              r"[-\.\s]*"            # strip -, ., and whitespace
-                              r"(\d{3})"             # next three digits
-                              r"[-\.\s]*"            # strip -, ., and whitespace
-                              r"(\d{4})$")           # last four digits
+PHONE_TEST_REGEX = re.compile(r'[\(]?(\d{3})[\)]?'  # extract first three digits (0/1 first digit is international)
+                              r'[-\.\s]*'            # strip -, ., and whitespace
+                              r'(\d{3})'             # next three digits
+                              r'[-\.\s]*'            # strip -, ., and whitespace
+                              r'(\d{4})$')           # last four digits
 
-BACKEND_EXTENSION_SEPARATOR = "x"
-VALID_EXTENSION_SEPARATOR = ", ext "
-
-PHONE_REGEX_VALIDATOR = RegexValidator(
-	regex=PHONE_REGEX, message="Phone number must be entered in the format: "### - ### - ####"."
-)
+BACKEND_EXTENSION_SEPARATOR = 'x'
+VALID_EXTENSION_SEPARATOR = ', press '
 
 
 class PhoneNumber:
     def __init__(self, txt):
-        self.raw_phone = re.sub(r"[()]", " ", str(txt)) if txt else ""
+        self.raw_phone = re.sub(r"[()]", ' ', str(txt)) if txt else ''
         self._is_parsed = False
-        self._base_number = ""
-        self._base_number_dirty = ""
+        self._base_number = ''
+        self._base_number_dirty = ''
         self._extensions = []
         self._has_extensions = False
         self._valid_extensions = False
         self._is_number_E164 = False
-        self._cleaned = ""
+        self._cleaned = ''
 
     def parse(self):
         if not self._is_parsed and self.raw_phone:
             if VALID_EXTENSION_SEPARATOR in self.raw_phone:
                 parts = self.raw_phone.split(VALID_EXTENSION_SEPARATOR)
             else:
-                # Split on extensions
-                parts = re.split(",|ext|e|x|/", self.raw_phone)
+                parts = self.raw_phone.split(BACKEND_EXTENSION_SEPARATOR)
 
             self._base_number = self._base_number_dirty = parts[0].strip()
             self._extensions = [x.strip() for x in parts[1:]]
@@ -43,13 +37,13 @@ class PhoneNumber:
             # numbers will require more logic (e.g. making sure first digits are a country code, removing "0" prefix
             # from some local numbers, etc.).
             self._is_number_E164 = False
-            regex_test = PHONE_REGEX.search(self._base_number)
+            regex_test = PHONE_TEST_REGEX.search(self._base_number)
             if regex_test:
                 self._is_number_E164 = True
-                self._base_number = "+1" + "".join(regex_test.groups())
+                self._base_number = '+1' + ''.join(regex_test.groups())
             self._cleaned = self._base_number
 
-            # Clean extensions. Valid extensions are only digits and are separated by "x".
+            # Clean extensions. Valid extensions are only digits and are separated by 'x'.
             self._valid_extensions = True
             self._has_extensions = bool(self._extensions)
             for extension in self._extensions:
@@ -79,11 +73,11 @@ class PhoneNumber:
     def is_usa(self):
         # Whether this is an E164 phone number (see above) with a US country code
         self.parse()
-        return self._is_number_E164 and self._cleaned.startswith("+1")
+        return self._is_number_E164 and self._cleaned.startswith('+1')
 
     @property
     def cleaned(self):
-        # Canonically formatted value, as in "+12223334444x55". This is what"s stored in the DB.
+        # Canonically formatted value, as in "+12223334444x55". This is what's stored in the DB.
         self.parse()
         return self._cleaned
 
@@ -97,7 +91,7 @@ class PhoneNumber:
     def base_number_fmt(self):
         # The base part of the cleaned number, but formatted: e.g. "(415) 222-3333"
         if self.is_usa:
-            return "{} - {} - {}".format(self._base_number[2:5], self._base_number[5:8], self._base_number[8:12])
+            return '+1 ({}) {}-{}'.format(self._base_number[2:5], self._base_number[5:8], self._base_number[8:12])
         return self._base_number
 
     @property
@@ -127,15 +121,30 @@ class PhoneNumber:
     def __eq__(self, ph):
         if isinstance(ph, PhoneNumber):
             return self.cleaned == ph.cleaned
+
         elif isinstance(ph, str):
             return self.cleaned == PhoneNumber(ph).cleaned
+
         elif not ph and not self:
             return True
+
         return False
+
+
+def parse_phone_number(phone_number: str) -> str:
+    if phone_number is None:
+        return None
+    phone_number = PhoneNumber(phone_number)
+    phone_number.parse()
+    return None if phone_number.formatted == "" else phone_number.formatted
 
 
 def normalize_phone_number(phone_number: str) -> str:
     """
     Helper function to normalize phone Number
     """
-    return PhoneNumber(phone_number).formatted
+    if phone_number is None:
+        return None
+    phone_number = PhoneNumber(phone_number)
+    phone_number.parse()
+    return None if phone_number.base_number == "" else phone_number.base_number

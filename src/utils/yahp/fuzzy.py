@@ -1,14 +1,25 @@
-
+from logging import getLogger
 from typing import List, Tuple
 
+logger = getLogger("service")
 
-def ngrams(field, n=3):
+
+def ngrams(field: str, n: int = 3):
     return [field[i:i+n] for i in range(len(field)-n+1)]
-        
 
-def tversky_index(text1, text2, a=None, b=None, q=3, pad=True):
-    if text1 in {None, ""} or text2 in {None, ""}:
+
+def tversky_index(text1: str,
+                  text2: str,
+                  a: float = None,
+                  b: float = None,
+                  q: int = 3,
+                  pad: bool = True):
+    if text1 in {None, ''} or text2 in {None, ''}:
         return 0
+    
+    if len(text1) < q or len(text2) < q:
+        return 0
+
     ngram1, ngram2 = set(ngrams(text1, q)), set(ngrams(text2, q))
     agree_tot = len(ngram1.intersection(ngram2))
     v1 = len(ngram1) - agree_tot
@@ -27,9 +38,19 @@ def tversky_index(text1, text2, a=None, b=None, q=3, pad=True):
     try:
         return float(agree_tot)/(agree_tot+a*v1+b*v2)
     except:
-        print(f"[tversky_index] error with `{text1}` | `{text2}`")
+        logger.error(
+            f'Error with `{text1}` | `{text2}`', exc_info=True
+        )
         return 0
 
 
-def tversky_compare(val: str, options: List[str]) -> List[Tuple[str, float]]:
-    return [(option, tversky_index(val, option, .5, .5)) for option in options]
+def tversky_compare(val: str,
+                    options: List[str],
+                    threshold: float = 0.90) -> List[Tuple[str, float]]:
+    results = [
+        (option, tversky_index(val, option, .5, .5)) for option in options
+    ]
+    results = sorted(
+        [val for val in results if val[1] >= threshold], key=lambda x: x[1]
+    )
+    return results

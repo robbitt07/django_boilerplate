@@ -2,6 +2,8 @@ from django.conf import settings
 
 import time
 from logging import Logger
+import json
+import pandas as pd
 from statistics import mean
 
 
@@ -26,6 +28,57 @@ def subset_aggregates(subsets: dict) -> dict:
     return results
 
 
+def get_code_profiler_result_df(process: "CodeProfiler") -> pd.DataFrame:
+    """Get Human Readable Pandas Dataframe of a Code Profiler Batch Run
+
+    Parameters
+    ----------
+    process : CodeProfiler
+        _description_
+
+    Returns
+    -------
+    pd.DataFrame
+        _description_
+    """
+    # Task Dataframe
+    task_df = pd.DataFrame(
+        [
+            {
+                "task": key,
+                "start": value["start"],
+                "end": value["end"],
+                "runtime": value["runtime"]
+            } for key, value in process.profile.items()
+        ],
+        columns=["task", "start", "end", "runtime"],
+    )
+
+    # Sub Task Dataframe
+    sub_task_df = pd.DataFrame(
+        [
+            {
+                "task": key,
+                "sub_task": sub_key,
+                "records": sub_value["records"],
+                "total_runtime": sub_value["sum"],
+                "avg_runtime": sub_value["avg"],
+                "min_runtime": sub_value["min"],
+                "max_runtime": sub_value["max"]
+            } for key, value in process.profile.items() if "subsets" in value
+            for sub_key, sub_value in value.get("subsets", {}).items()
+        ],
+        columns=[
+            "task", "sub_task", "records", "total_runtime", "avg_runtime",
+            "min_runtime", "min_runtime", "max_runtime"
+        ]
+    )
+
+    # Merge Task and Sub Task Dataframe
+    full_task_df = pd.merge(task_df, sub_task_df, how="left", on="task")
+    return full_task_df.where((pd.notnull(full_task_df)), "")
+
+
 class CodeProfiler(object):
     """
     Code Profiler that easily records step progress within a larger process
@@ -46,11 +99,14 @@ class CodeProfiler(object):
 
     """
 
-    def __init__(self, process_name: str, logger: Logger, active: bool = settings.DEBUG):
+    def __init__(self,
+                 process_name: str,
+                 logger: Logger,
+                 active: bool = settings.DEBUG or settings.PROFILER):
         self.process_name = process_name
         self.logger = logger
         self.active = active
-        self.start = time.perf_counter()
+        self.start = round(time.perf_counter(), 4)
         self.profile = {}
 
     def info(self, step_name: str, msg: str):
@@ -63,7 +119,7 @@ class CodeProfiler(object):
             return
         
         # Record Start of Process
-        self.profile.update({step_name: {"start": time.perf_counter()}})
+        self.profile.update({step_name: {"start": round(time.perf_counter(), 4)}})
         self.logger.info(f"[process={self.process_name} step={step_name}] start")
 
     def complete_step(self, step_name: str, meta: dict = None):
@@ -73,12 +129,12 @@ class CodeProfiler(object):
         
         # Record end if step not already existing
         if step is None:
-            self.profile.update({step_name: {"end": time.perf_counter()}})
+            self.profile.update({step_name: {"end": round(time.perf_counter(), 4)}})
             self.logger.info(f"[process={self.process_name} step={step_name}] complete")
         
         elif step.get("start", None) is not None:
             runtime = round(time.perf_counter() - step.get("start"), 4)
-            step.update({"end": time.perf_counter(), "runtime": runtime})
+            step.update({"end": round(time.perf_counter(), 4), "runtime": runtime})
             
             # TODO: Process Substep Meta
             subsets = step.pop("subsets", None)
@@ -107,7 +163,7 @@ class CodeProfiler(object):
         # Get All Subsets
         subsets = step.get("subsets", {})
         subprocess = subsets.get(subprocces_id, {})
-        subprocess.update({substep_name: {"start": time.perf_counter()}})
+        subprocess.update({substep_name: {"start": round(time.perf_counter(), 4)}})
         subsets.update({subprocces_id: subprocess})
         step.update({"subsets": subsets})
 
@@ -122,7 +178,7 @@ class CodeProfiler(object):
         substep = subprocess.get(substep_name, {})
         if substep.get("start", None) is not None:
             runtime = round(time.perf_counter() - substep.get("start"), 4)
-            substep.update({"end": time.perf_counter(), "runtime": runtime})
+            substep.update({"end": round(time.perf_counter(), 4), "runtime": runtime})
             # Store Meta like number of records processsed
             if meta is not None:
                 substep.update({"meta": meta})
@@ -131,7 +187,7 @@ class CodeProfiler(object):
     def stop(self):
         if not self.active:
             return
-        runtime = time.perf_counter() - self.start
+        runtime = round(time.perf_counter() - self.start, 4)
         self.logger.info(
-            f"[process={self.process_name}] complete runtime={runtime} profile={str(self.profile)}"
+            f"[process={self.process_name}] complete runtime={runtime} profile={json.dumps(self.profile)}"
         )

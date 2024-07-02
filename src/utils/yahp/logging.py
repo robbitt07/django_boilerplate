@@ -14,7 +14,7 @@ class PackagePathFilter(logging.Filter):
             if pathname.startswith(path):
                 record.relativepath = (
                     os.path.relpath(pathname, path)
-                    .replace("/", ".").replace("\\", ".").replace(".py", "")
+                    .replace('/', '.').replace('\\', '.').replace('.py', '')
                 )
                 break
         return True
@@ -24,8 +24,8 @@ class LoggerAdapter(logging.LoggerAdapter):
     def __init__(self, logger, extra_fields: dict):
         super(LoggerAdapter, self).__init__(logger, {})
         self.extra_fields = extra_fields
-        self.prefix = " ".join([f"{key}={value}" for key, value in extra_fields.items()])
+        self.prefix = ' '.join([f'{key}={value}' for key, value in extra_fields.items()])
 
     def process(self, msg, kwargs):
 
-        return "[%s] %s" % (self.prefix, msg), kwargs
+        return '[%s] %s' % (self.prefix, msg), kwargs
