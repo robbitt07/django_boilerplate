@@ -16,14 +16,17 @@ DATABASES = {
 }
 
 # CORS AND REST API
-CORS_URLS_REGEX = r"^/api.*"
-CORS_ORIGIN_ALLOW_ALL = True
-CORS_ORIGIN_WHITELIST = (
+CORS_URLS_REGEX = r"/api/.*"
+CORS_ALLOW_CREDENTIALS = True
+CORS_ALLOWED_ORIGINS = (
     "http://127.0.0.1:3000",
     "http://localhost:3000",
     "http://127.0.0.1:8000",
     "http://localhost:8000",
+    "http://127.0.0.1:9250",
+    "http://localhost:9250",
 )
+CSRF_TRUSTED_ORIGINS = CORS_ALLOWED_ORIGINS
 
 REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSES": (
